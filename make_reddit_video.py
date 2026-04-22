@@ -117,62 +117,56 @@ Topic hint: "{topic}"
 - Body: empty string.
 - Upvotes + fake timestamp (e.g. "38.4k", "6h")
 
-━━ COMMENTS — ultra short, instant punchline ━━
-These must be ONE OR TWO SENTENCES MAX. Think Twitter/Reddit one-liner energy, not a story.
-The joke lands in under 5 seconds of reading. If it takes longer, it's too long.
+━━ COMMENTS — short, punchy, universally funny ━━
+STRICT RULES — follow exactly:
+- MAX 15 words per comment. Not 20. Not 18. 15.
+- Every single person who reads it must immediately understand why it's funny. No niche references. No weird metaphors. No abstract concepts.
+- Before writing a comment, ask yourself: "Would my mum laugh at this? Would a 15-year-old laugh at this?" If no to either — rewrite it.
+- The joke must be in the LAST 3 words. Everything before it is setup.
+- NO stories. NO explanations. One situation, one punchline, done.
 
-The best Reddit comments that go viral on TikTok are short, unexpected, and hit like a punchline.
-They either: (a) take the question completely literally in a stupid way, (b) confess something embarrassingly relatable, or (c) go somewhere nobody expected in as few words as possible.
+THE 3 FORMATS THAT ACTUALLY GO VIRAL — pick one per comment:
 
-RULES:
-- MAX 20 words per comment. Shorter is almost always funnier.
-- The punchline is the LAST thing said. No explaining after it.
-- Must be instantly funny — zero setup time needed.
-- Must be something a real person would actually say on Reddit.
+FORMAT 1 — The deadpan confession (say something embarrassing like it's completely normal):
+  "My therapist has a sticky note that just says 'oh no' at the top of my file."
+  "I have been pronouncing 'quinoa' wrong for 11 years. I found out at a dinner party."
+  "I told my boss I'd be late due to 'personal reasons.' The reason was I wanted breakfast."
 
-PROVEN formats that go viral (use these as templates):
+FORMAT 2 — The unexpected but logical answer (take the question literally or go somewhere nobody expects):
+  "Undertaker. Everybody dies." (for job security)
+  "Buying caterpillars." (for what gives you butterflies)
+  "I moved my coworker's chair down 1cm every day. He bought a back brace."
 
-Format A — Literal interpretation (take the question too literally):
-  Q: "What gives you butterflies?" → A: "Buying caterpillars."
-  Q: "What job will always have work?" → A: "Undertaker. Everybody dies."
+FORMAT 3 — The ALL CAPS breakdown (relatable frustration at full volume):
+  "I said 'you too' when the waiter told me to enjoy my food. I have not recovered."
+  "THIRTEEN YEARS of school and nobody told me taxes were a thing I'd have to do MYSELF."
+  "I waved back at someone who wasn't waving at me. I am not the same person I was before."
 
-Format B — Honest self-aware confession (embarrassing truth said deadpan):
-  Q: "Introverts how did you meet your partner?" → A: "She just made me her boyfriend one day. I was too scared to ask questions."
-  Q: "What's wrong with you?" → A: "I looked at my stats. The list is long."
-
-Format C — Unexpected left turn (starts normal, ends somewhere insane):
-  Q: "What's your morning routine?" → A: "Wake up. Lie still for 20 minutes pretending I'm dead. Then get up."
-  Q: "What's the pettiest thing you've done?" → A: "I moved my coworker's chair down half an inch every day for two months. He bought a back brace."
-
-Format D — ALL CAPS breakdown (relatable frustration delivered at maximum volume):
-  Q: "People with no system at school, where are you now?" → A: "NOT GREAT MY DUDE. NOT GREAT."
-
-Comment 1 (~29k): Format A or B. Instantly relatable or brilliantly stupid. Under 15 words.
-Comment 2 (~11k): Format C. One unexpected turn. Under 20 words. Punchline at the end.
-Comment 3 (~2.8k): The wildest one. Format C or D. Must make someone pause and re-read it. Can end deadpan or in ALL CAPS.
+Comment 1 (~29k): FORMAT 1. Embarrassing, relatable, deadpan. Under 15 words. Everyone has done something like this.
+Comment 2 (~11k): FORMAT 2 or 3. Slightly more unhinged. Punchline lands hard at the end.
+Comment 3 (~2.8k): The best one. FORMAT 3. ALL CAPS at the most painful word. Must make someone spit out their drink.
 
 ━━ VOICE SCRIPT ━━
-British male. Sounds genuinely entertained, like he's reading these cold and loving it.
-Warm and dry — like a comedian who's seen everything but this still got him.
+British male. Dry, warm, genuinely entertained. Reads like he's seeing these for the first time.
+Short, sharp reactions — like a comedian who lets the joke breathe before commenting.
 
-MUST say upvote count out loud for each comment:
+MUST say upvote count out loud:
   - "Top comment — twenty-nine THOUSAND upvotes:"
   - "Eleven thousand upvotes:"
   - "Two thousand eight hundred upvotes:"
 
-Segment 0 (question): Short punchy hook. 1-2 sentences. Make it sound unmissable.
-  e.g. "r-slash AskReddit just asked: [question]. The answers are sending me."
+Segment 0: One sentence hook. Punchy. Makes it sound unmissable.
+  e.g. "AskReddit just asked [question] and I was not ready for these answers."
 
-Segments 1-3: Read the comment. Then ONE short reaction — dry, warm, disbelieving. Under 10 words.
-  The reaction highlights the joke so nobody misses it. Keep it tight.
-  GOOD reactions:
-    "...buying caterpillars. I'm sorry WHAT."
-    "...half an inch. Every day. For two months. That man is a VILLAIN."
-    "...she just made him her boyfriend. He didn't fight it. Legend."
-    "...undertaker. Everybody dies. He just said it. Out loud. No hesitation."
+Segments 1-3: Read the comment word for word. Then ONE short dry reaction — 5 to 8 words max.
+  Reaction must point at the single funniest detail. Nothing generic.
+  GOOD: "...he bought a back brace. That man deserved it."
+  GOOD: "...enjoy my food — you too. Eleven years later, still not over it."
+  GOOD: "...sticky note just says 'oh no'. The therapist GAVE UP."
+  BAD: "That's so funny!" / "Wow!" / "I can't believe that!" — too generic, never use these.
 
-Keep tight: question ≤ 20 words, each comment + reaction ≤ 35 words total.
-Use "..." for pauses. ALL CAPS on the single funniest word per segment.
+Total per segment (comment + reaction): MAX 30 words.
+Use "..." for natural pauses. ALL CAPS on the one funniest word only.
 
 ━━ PEXELS SEARCH ━━
 Pick the most visually active/dynamic search term for this topic's vibe.
