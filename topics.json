@@ -1,66 +1,249 @@
 {
   "topics": [
-    { "topic": "What is the most unhinged thing a coworker has done that HR somehow ignored?", "used": false, "audience": "work" },
-    { "topic": "What is the pettiest way someone you know has quit their job?", "used": false, "audience": "work" },
-    { "topic": "What is the most passive aggressive thing a coworker has ever done?", "used": false, "audience": "work" },
-    { "topic": "What is the most ridiculous reason someone got fired?", "used": false, "audience": "work" },
-    { "topic": "What is the weirdest thing a customer has ever said or done to you?", "used": false, "audience": "work" },
-    { "topic": "What is the most unhinged thing a boss has ever said in complete seriousness?", "used": false, "audience": "work" },
-
-    { "topic": "What is the most unhinged thing a teacher did that you still think about to this day?", "used": false, "audience": "school" },
-    { "topic": "What is the dumbest reason a teacher gave you detention?", "used": false, "audience": "school" },
-    { "topic": "What is the wildest thing you ever witnessed happen in a classroom?", "used": false, "audience": "school" },
-    { "topic": "What is the most embarrassing thing that happened to you at school?", "used": false, "audience": "school" },
-    { "topic": "What is the most unhinged thing a classmate has ever done?", "used": false, "audience": "school" },
-
-    { "topic": "What is the most embarrassing thing your parents have done in public?", "used": false, "audience": "family" },
-    { "topic": "What is the most unhinged thing a relative has said at a family dinner?", "used": false, "audience": "family" },
-    { "topic": "What is the pettiest argument you have ever had with a family member?", "used": false, "audience": "family" },
-    { "topic": "What is the weirdest family tradition you grew up thinking was completely normal?", "used": false, "audience": "family" },
-    { "topic": "What is the most unhinged thing a parent has done at a school event?", "used": false, "audience": "family" },
-
-    { "topic": "What is the most awkward thing that has happened on a first date?", "used": false, "audience": "dating" },
-    { "topic": "What is the most unhinged thing someone has done to get your attention?", "used": false, "audience": "dating" },
-    { "topic": "What is the pettiest thing you have done after a breakup?", "used": false, "audience": "dating" },
-    { "topic": "What is the most embarrassing thing that has happened during a date?", "used": false, "audience": "dating" },
-    { "topic": "What is the biggest red flag you ignored in a relationship?", "used": false, "audience": "dating" },
-
-    { "topic": "What is the pettiest thing you have ever done to a neighbour?", "used": false, "audience": "neighbours" },
-    { "topic": "What is the most unhinged neighbour you have ever had?", "used": false, "audience": "neighbours" },
-    { "topic": "What is the most passive aggressive note you have ever received or written?", "used": false, "audience": "neighbours" },
-
-    { "topic": "What is the most unhinged thing you have witnessed at a restaurant?", "used": false, "audience": "food" },
-    { "topic": "What is the pettiest food argument you have ever had with someone?", "used": false, "audience": "food" },
-    { "topic": "What is the wildest thing a waiter or customer has ever done?", "used": false, "audience": "food" },
-    { "topic": "What is the most unhinged thing you have seen happen at a supermarket?", "used": false, "audience": "food" },
-
-    { "topic": "What is the most unhinged thing you have seen someone do at the gym?", "used": false, "audience": "gym" },
-    { "topic": "What is the most embarrassing gym moment you have ever witnessed?", "used": false, "audience": "gym" },
-
-    { "topic": "What is the most passive aggressive thing a roommate has ever done?", "used": false, "audience": "roommates" },
-    { "topic": "What is the most unhinged roommate situation you have ever been in?", "used": false, "audience": "roommates" },
-    { "topic": "What is the pettiest argument you have ever had with a roommate?", "used": false, "audience": "roommates" },
-
-    { "topic": "What is the most unhinged thing your pet has ever done?", "used": false, "audience": "pets" },
-    { "topic": "What is the most embarrassing thing a pet has done in front of your guests?", "used": false, "audience": "pets" },
-    { "topic": "What is the most unhinged reason someone has taken their pet to the vet?", "used": false, "audience": "pets" },
-
-    { "topic": "What is the most unhinged thing you have witnessed on a plane?", "used": false, "audience": "travel" },
-    { "topic": "What is the most awkward hotel situation you have ever been in?", "used": false, "audience": "travel" },
-    { "topic": "What is the most unhinged thing someone has done at an airport?", "used": false, "audience": "travel" },
-
-    { "topic": "What is the most unhinged thing a child has said in complete seriousness?", "used": false, "audience": "kids" },
-    { "topic": "What is the most embarrassing thing a child has done in public?", "used": false, "audience": "kids" },
-
-    { "topic": "What is the most unhinged thing you have witnessed at a wedding?", "used": false, "audience": "events" },
-    { "topic": "What is the most awkward thing that has happened to you at a party?", "used": false, "audience": "events" },
-    { "topic": "What is the most unhinged best man or bridesmaid story you have ever heard?", "used": false, "audience": "events" },
-
-    { "topic": "What is the most unhinged thing someone has done on public transport?", "used": false, "audience": "public" },
-    { "topic": "What is the most embarrassing thing that has happened to you in a public place?", "used": false, "audience": "public" },
-    { "topic": "What is the pettiest argument you have ever had with a complete stranger?", "used": false, "audience": "public" },
-
-    { "topic": "What is the most unhinged thing someone has done in an online game?", "used": false, "audience": "gaming" },
-    { "topic": "What is the most unhinged person you have ever met online?", "used": false, "audience": "gaming" }
+    {
+      "topic": "What is the most unhinged thing a coworker has done that HR somehow ignored?",
+      "used": false,
+      "audience": "work"
+    },
+    {
+      "topic": "What is the pettiest way someone you know has quit their job?",
+      "used": false,
+      "audience": "work"
+    },
+    {
+      "topic": "What is the most passive aggressive thing a coworker has ever done?",
+      "used": false,
+      "audience": "work"
+    },
+    {
+      "topic": "What is the most ridiculous reason someone got fired?",
+      "used": false,
+      "audience": "work"
+    },
+    {
+      "topic": "What is the weirdest thing a customer has ever said or done to you?",
+      "used": false,
+      "audience": "work"
+    },
+    {
+      "topic": "What is the most unhinged thing a boss has ever said in complete seriousness?",
+      "used": true,
+      "audience": "work"
+    },
+    {
+      "topic": "What is the most unhinged thing a teacher did that you still think about to this day?",
+      "used": false,
+      "audience": "school"
+    },
+    {
+      "topic": "What is the dumbest reason a teacher gave you detention?",
+      "used": false,
+      "audience": "school"
+    },
+    {
+      "topic": "What is the wildest thing you ever witnessed happen in a classroom?",
+      "used": false,
+      "audience": "school"
+    },
+    {
+      "topic": "What is the most embarrassing thing that happened to you at school?",
+      "used": false,
+      "audience": "school"
+    },
+    {
+      "topic": "What is the most unhinged thing a classmate has ever done?",
+      "used": false,
+      "audience": "school"
+    },
+    {
+      "topic": "What is the most embarrassing thing your parents have done in public?",
+      "used": false,
+      "audience": "family"
+    },
+    {
+      "topic": "What is the most unhinged thing a relative has said at a family dinner?",
+      "used": false,
+      "audience": "family"
+    },
+    {
+      "topic": "What is the pettiest argument you have ever had with a family member?",
+      "used": false,
+      "audience": "family"
+    },
+    {
+      "topic": "What is the weirdest family tradition you grew up thinking was completely normal?",
+      "used": false,
+      "audience": "family"
+    },
+    {
+      "topic": "What is the most unhinged thing a parent has done at a school event?",
+      "used": false,
+      "audience": "family"
+    },
+    {
+      "topic": "What is the most awkward thing that has happened on a first date?",
+      "used": false,
+      "audience": "dating"
+    },
+    {
+      "topic": "What is the most unhinged thing someone has done to get your attention?",
+      "used": false,
+      "audience": "dating"
+    },
+    {
+      "topic": "What is the pettiest thing you have done after a breakup?",
+      "used": false,
+      "audience": "dating"
+    },
+    {
+      "topic": "What is the most embarrassing thing that has happened during a date?",
+      "used": false,
+      "audience": "dating"
+    },
+    {
+      "topic": "What is the biggest red flag you ignored in a relationship?",
+      "used": false,
+      "audience": "dating"
+    },
+    {
+      "topic": "What is the pettiest thing you have ever done to a neighbour?",
+      "used": false,
+      "audience": "neighbours"
+    },
+    {
+      "topic": "What is the most unhinged neighbour you have ever had?",
+      "used": false,
+      "audience": "neighbours"
+    },
+    {
+      "topic": "What is the most passive aggressive note you have ever received or written?",
+      "used": false,
+      "audience": "neighbours"
+    },
+    {
+      "topic": "What is the most unhinged thing you have witnessed at a restaurant?",
+      "used": false,
+      "audience": "food"
+    },
+    {
+      "topic": "What is the pettiest food argument you have ever had with someone?",
+      "used": false,
+      "audience": "food"
+    },
+    {
+      "topic": "What is the wildest thing a waiter or customer has ever done?",
+      "used": false,
+      "audience": "food"
+    },
+    {
+      "topic": "What is the most unhinged thing you have seen happen at a supermarket?",
+      "used": false,
+      "audience": "food"
+    },
+    {
+      "topic": "What is the most unhinged thing you have seen someone do at the gym?",
+      "used": false,
+      "audience": "gym"
+    },
+    {
+      "topic": "What is the most embarrassing gym moment you have ever witnessed?",
+      "used": false,
+      "audience": "gym"
+    },
+    {
+      "topic": "What is the most passive aggressive thing a roommate has ever done?",
+      "used": false,
+      "audience": "roommates"
+    },
+    {
+      "topic": "What is the most unhinged roommate situation you have ever been in?",
+      "used": false,
+      "audience": "roommates"
+    },
+    {
+      "topic": "What is the pettiest argument you have ever had with a roommate?",
+      "used": false,
+      "audience": "roommates"
+    },
+    {
+      "topic": "What is the most unhinged thing your pet has ever done?",
+      "used": false,
+      "audience": "pets"
+    },
+    {
+      "topic": "What is the most embarrassing thing a pet has done in front of your guests?",
+      "used": false,
+      "audience": "pets"
+    },
+    {
+      "topic": "What is the most unhinged reason someone has taken their pet to the vet?",
+      "used": false,
+      "audience": "pets"
+    },
+    {
+      "topic": "What is the most unhinged thing you have witnessed on a plane?",
+      "used": false,
+      "audience": "travel"
+    },
+    {
+      "topic": "What is the most awkward hotel situation you have ever been in?",
+      "used": false,
+      "audience": "travel"
+    },
+    {
+      "topic": "What is the most unhinged thing someone has done at an airport?",
+      "used": false,
+      "audience": "travel"
+    },
+    {
+      "topic": "What is the most unhinged thing a child has said in complete seriousness?",
+      "used": false,
+      "audience": "kids"
+    },
+    {
+      "topic": "What is the most embarrassing thing a child has done in public?",
+      "used": false,
+      "audience": "kids"
+    },
+    {
+      "topic": "What is the most unhinged thing you have witnessed at a wedding?",
+      "used": false,
+      "audience": "events"
+    },
+    {
+      "topic": "What is the most awkward thing that has happened to you at a party?",
+      "used": false,
+      "audience": "events"
+    },
+    {
+      "topic": "What is the most unhinged best man or bridesmaid story you have ever heard?",
+      "used": false,
+      "audience": "events"
+    },
+    {
+      "topic": "What is the most unhinged thing someone has done on public transport?",
+      "used": false,
+      "audience": "public"
+    },
+    {
+      "topic": "What is the most embarrassing thing that has happened to you in a public place?",
+      "used": false,
+      "audience": "public"
+    },
+    {
+      "topic": "What is the pettiest argument you have ever had with a complete stranger?",
+      "used": false,
+      "audience": "public"
+    },
+    {
+      "topic": "What is the most unhinged thing someone has done in an online game?",
+      "used": false,
+      "audience": "gaming"
+    },
+    {
+      "topic": "What is the most unhinged person you have ever met online?",
+      "used": false,
+      "audience": "gaming"
+    }
   ]
 }
