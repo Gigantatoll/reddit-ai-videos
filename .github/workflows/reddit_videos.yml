@@ -1,0 +1,59 @@
+name: Reddit Video Generator
+
+on:
+  schedule:
+    # Hamburg is UTC+2 in summer (CEST)
+    # 8:00 AM Hamburg  = 06:00 UTC
+    # 7:00 PM Hamburg  = 17:00 UTC
+    - cron: "0 6 * * *"    # 8am Hamburg
+    - cron: "0 17 * * *"   # 7pm Hamburg
+
+  # Also lets you trigger it manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  generate-video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # ── 1. Checkout repo ───────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      # ── 2. Python setup ────────────────────────────────────────────────────
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system font (for PIL text rendering)
+        run: sudo apt-get install -y fonts-liberation
+
+      - name: Install Python deps
+        run: pip install -r requirements.txt
+
+      # ── 3. Run the scheduler ───────────────────────────────────────────────
+      - name: Generate Reddit video
+        env:
+          ANTHROPIC_KEY:   ${{ secrets.ANTHROPIC_KEY }}
+          ELEVENLABS_KEY:  ${{ secrets.ELEVENLABS_KEY }}
+          SHOTSTACK_KEY:   ${{ secrets.SHOTSTACK_KEY }}
+          PEXELS_KEY:      ${{ secrets.PEXELS_KEY }}
+          CLOUD_MODE:      "true"
+          OUTPUT_FOLDER:   "${{ github.workspace }}/output"
+          ASSETS_DIR:      "${{ github.workspace }}/assets"
+        run: |
+          mkdir -p output assets
+          python scheduler.py
+
+      # ── 4. Commit results back to repo ─────────────────────────────────────
+      - name: Commit video results
+        run: |
+          git config user.name  "Reddit Bot"
+          git config user.email "bot@reddit-videos.local"
+          git add output/ topics.json scheduler.log || true
+          git diff --cached --quiet || git commit -m "🎬 Auto-generated video $(date +'%Y-%m-%d %H:%M UTC')"
+          git push

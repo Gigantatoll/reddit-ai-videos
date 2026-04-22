@@ -1,0 +1,15 @@
+# Local temp files
+/tmp/
+__pycache__/
+*.pyc
+*.pyo
+
+# Local video files (too large for git — access via Shotstack URL in output/*.md)
+*.mp4
+*.wav
+
+# Local asset cache (regenerated automatically)
+assets/
+
+# macOS junk
+.DS_Store
