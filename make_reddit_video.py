@@ -117,56 +117,59 @@ Topic hint: "{topic}"
 - Body: empty string.
 - Upvotes + fake timestamp (e.g. "38.4k", "6h")
 
-━━ COMMENTS — short, punchy, universally funny ━━
-STRICT RULES — follow exactly:
-- MAX 15 words per comment. Not 20. Not 18. 15.
-- Every single person who reads it must immediately understand why it's funny. No niche references. No weird metaphors. No abstract concepts.
-- Before writing a comment, ask yourself: "Would my mum laugh at this? Would a 15-year-old laugh at this?" If no to either — rewrite it.
-- The joke must be in the LAST 3 words. Everything before it is setup.
-- NO stories. NO explanations. One situation, one punchline, done.
+━━ COMMENTS — the headbutt formula ━━
+Every comment must follow this exact structure:
+  1. Normal social situation everyone has been in
+  2. Two people do two different things at the same time
+  3. Last 3 words = the punchline. Unexpected. Specific. Slightly physical or absurd.
 
-THE 3 FORMATS THAT ACTUALLY GO VIRAL — pick one per comment:
+The gold standard for this format — study these exactly:
+  "Went for a handshake. She went for a hug. I HEADBUTTED her."
+  "Said goodbye to someone. Started walking the same direction. Did it for four minutes."
+  "Waved back at someone who wasn't waving at me. The person they were waving at saw everything."
+  "Said 'you too' when the waiter said enjoy your meal. He said 'I don't work here.'"
+  "Went to hold the door open. The person was too far. We both committed. It took 40 seconds."
+  "Called my teacher mum. She said 'aww'. I quit school the next day."
+  "Said 'love you' when hanging up on my dentist. He said 'love you too'. We never spoke of it."
+  "Tried to look cool tripping on nothing. Fell into a stranger. He caught me. We made eye contact."
 
-FORMAT 1 — The deadpan confession (say something embarrassing like it's completely normal):
-  "My therapist has a sticky note that just says 'oh no' at the top of my file."
-  "I have been pronouncing 'quinoa' wrong for 11 years. I found out at a dinner party."
-  "I told my boss I'd be late due to 'personal reasons.' The reason was I wanted breakfast."
+WHY THESE WORK — understand this before writing:
+- The situation is universal. Everyone has done it or watched it happen.
+- The embarrassment is physical or verbal — it actually happened, it can't be taken back.
+- The punchline is the logical worst-case outcome of that situation, stated deadpan.
+- It's SHORT. 10-15 words. The joke lands before you finish reading.
+- It makes you immediately think of YOUR own version — that's what fills TikTok comments.
 
-FORMAT 2 — The unexpected but logical answer (take the question literally or go somewhere nobody expects):
-  "Undertaker. Everybody dies." (for job security)
-  "Buying caterpillars." (for what gives you butterflies)
-  "I moved my coworker's chair down 1cm every day. He bought a back brace."
+STRICT RULES:
+- MAX 15 words. Under 12 is better.
+- No niche references. No made-up scenarios. No abstract humour.
+- The funniest word goes in ALL CAPS. Just one.
+- Must pass the "my mum and a 14-year-old both laugh" test. If either wouldn't get it — rewrite.
 
-FORMAT 3 — The ALL CAPS breakdown (relatable frustration at full volume):
-  "I said 'you too' when the waiter told me to enjoy my food. I have not recovered."
-  "THIRTEEN YEARS of school and nobody told me taxes were a thing I'd have to do MYSELF."
-  "I waved back at someone who wasn't waving at me. I am not the same person I was before."
-
-Comment 1 (~29k): FORMAT 1. Embarrassing, relatable, deadpan. Under 15 words. Everyone has done something like this.
-Comment 2 (~11k): FORMAT 2 or 3. Slightly more unhinged. Punchline lands hard at the end.
-Comment 3 (~2.8k): The best one. FORMAT 3. ALL CAPS at the most painful word. Must make someone spit out their drink.
+Comment 1 (~29k): The most relatable one. Mild awkward social fail. Everyone nods immediately.
+Comment 2 (~11k): More escalated. The situation got worse because of what the person did next.
+Comment 3 (~2.8k): The best one. Most unexpected outcome. Should make someone spit out their drink. End with one deadpan word that reframes everything.
 
 ━━ VOICE SCRIPT ━━
-British male. Dry, warm, genuinely entertained. Reads like he's seeing these for the first time.
-Short, sharp reactions — like a comedian who lets the joke breathe before commenting.
+British male. Dry, warm, like a mate reading these aloud at the pub.
+He lets the joke land before reacting. Doesn't oversell it.
 
 MUST say upvote count out loud:
   - "Top comment — twenty-nine THOUSAND upvotes:"
   - "Eleven thousand upvotes:"
   - "Two thousand eight hundred upvotes:"
 
-Segment 0: One sentence hook. Punchy. Makes it sound unmissable.
-  e.g. "AskReddit just asked [question] and I was not ready for these answers."
+Segment 0: One punchy hook sentence. Make it sound unmissable.
+  e.g. "AskReddit asked [question]. I was not prepared for these answers."
 
-Segments 1-3: Read the comment word for word. Then ONE short dry reaction — 5 to 8 words max.
-  Reaction must point at the single funniest detail. Nothing generic.
-  GOOD: "...he bought a back brace. That man deserved it."
-  GOOD: "...enjoy my food — you too. Eleven years later, still not over it."
-  GOOD: "...sticky note just says 'oh no'. The therapist GAVE UP."
-  BAD: "That's so funny!" / "Wow!" / "I can't believe that!" — too generic, never use these.
+Segments 1-3: Read the comment word for word. Pause. Then ONE dry reaction — 5 to 8 words. Point at the specific funniest detail.
+  GOOD: "...I HEADBUTTED her. He led with his HEAD."
+  GOOD: "...forty seconds. Neither of them left. Neither of them spoke."
+  GOOD: "...love you too. The dentist said LOVE YOU TOO."
+  NEVER: "That's hilarious!" / "Oh wow!" / "I can't!" — banned, too generic.
 
 Total per segment (comment + reaction): MAX 30 words.
-Use "..." for natural pauses. ALL CAPS on the one funniest word only.
+Use "..." for pauses. ALL CAPS on the single most painful word.
 
 ━━ PEXELS SEARCH ━━
 Pick the most visually active/dynamic search term for this topic's vibe.
