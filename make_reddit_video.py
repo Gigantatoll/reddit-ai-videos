@@ -115,48 +115,51 @@ Topic hint: "{topic}"
 - Body: empty string.
 - Upvotes + fake timestamp (e.g. "38.4k", "6h")
 
-━━ COMMENTS — short, clean, OUT OF POCKET ━━
-Write like the funniest comment in a viral Reddit thread. Real but shocking.
-Each comment MAX 2-3 sentences. Every word earns its place. No rambling.
+━━ COMMENTS — short, clean, UNHINGED AND SHOCKING ━━
+Write like the single most unhinged comment in a viral Reddit thread that made everyone lose it.
+Each comment MAX 2-3 sentences. Punchy, no filler.
 
-The comments must have a moment that makes people go "wait WHAT" — something specific, absurd, or mildly unhinged that you could only laugh at because it's so real.
-They should feel like something a real person actually did... but a slightly unhinged person.
+These are REAL stories from real (slightly insane) people. They must be believable — but the detail that makes them funny is that the person went WAY further than any normal human would, with complete calm and zero remorse.
 
-AVOID: generic "I did the normal thing" stories. AVOID: vague punchlines.
-AIM FOR: the specific detail that makes it insane. The one sentence that recontextualises everything.
+The formula: start normal → one completely out-of-pocket detail → deadpan ending that shows they have no regrets.
 
-Comment 1 (~29k): Starts relatable, ends with one detail that's slightly more unhinged than expected.
-  e.g. topic "neighbour": "Put a fake 'UNDER SURVEILLANCE' sign outside my house pointing directly at his driveway. He power-washed his whole driveway that same week. I didn't even have a camera."
+BANNED: anything a normal person would do. BANNED: vague or soft punchlines. BANNED: "I stopped talking to them."
+REQUIRED: a specific, absurd action. Something that makes people pause and re-read it. Something that gets screenshotted.
 
-Comment 2 (~11k): More escalated. The person clearly went too far and has no regrets. Specific and absurd.
-  e.g. topic "boss": "He told me I looked tired so I started sending him good morning texts at 4:58am every day. Just 'good morning :)'. For four months. He never mentioned it."
+Comment 1 (~29k): The person did something petty but genius. Sounds almost reasonable until the last sentence reveals it wasn't.
+  BAD: "I started ignoring my neighbour after the noise complaints."
+  GOOD: "Signed my neighbour up for every free catalogue I could find. 47 in total. He started getting mail addressed to 'The Resident Who Parks Like An Idiot'. That one wasn't me."
 
-Comment 3 (~2.8k): Starts normal, takes one completely unexpected turn. MUST end with a single deadpan sentence that makes it 10x funnier — something that reveals how unhinged the person actually is.
-  e.g. topic "ex": "Returned everything he ever gave me in a single IKEA bag. Included a gift receipt for a birthday hug. He called me crazy. I attached a label to that too."
+Comment 2 (~11k): Full escalation. This person committed. The level of effort is what makes it insane. Specific numbers, timeframes, or details that show how far they went.
+  BAD: "I got back at my boss by quitting dramatically."
+  GOOD: "My coworker stole my lunch so I started making increasingly unhinged lunches to protect them. Week 3 was a full roast chicken with a fork and knife, a candle, and a handwritten note that said 'please'. Nobody touched it. Nobody asked questions either."
+
+Comment 3 (~2.8k): Starts completely normal. Takes one turn that nobody sees coming. The final sentence must be so deadpan it sounds like a threat or a confession. This is the one that breaks people.
+  BAD: "My ex was awful so I moved on and met someone better."
+  GOOD: "After my breakup I deep cleaned his entire apartment, reorganised everything, left a scented candle burning, and blocked him on everything. He texted my mum to say thank you. I have never responded to that information."
 
 ━━ VOICE SCRIPT ━━
-British male, genuinely entertained — like he's reading these for the first time and can barely keep it together.
-NOT a flat robot. He sounds like a comedian reacting live.
+British male, genuinely entertained — like he's reading these for the first time and can barely hold it together.
+NOT robotic. He sounds like a comedian at a live show who just got told something insane.
 
 MUST say upvote count out loud for each comment:
   - "Top comment — twenty-nine THOUSAND upvotes:"
   - "Eleven thousand upvotes on this one:"
   - "Two thousand eight hundred upvotes:"
 
-Segment 0 (question): Hook immediately. Big energy. Make it unmissable.
-  e.g. "Right, r-slash AskReddit. Someone asked: [question]. Brace yourself."
+Segment 0 (question): Hook immediately. Big energy. Make it sound unmissable.
+  e.g. "Right, r-slash AskReddit asks: [question]. I was not prepared for these answers."
 
-Segments 1-3: Read the comment, then react with something genuinely funny and outrageous — a full 1-2 sentence take that either escalates the absurdity, calls out the insane detail, or makes an unexpected observation.
-  The reaction must be SPECIFIC to what just happened — not generic.
+Segments 1-3: Read the comment, then deliver a reaction that is genuinely funny on its own — not just a response, but a comedic take. Call out the most insane specific detail. Make an observation that escalates it further or reframes it in an even more absurd way.
+  The reaction must make the viewer laugh AGAIN after already laughing at the comment.
   Examples of the energy:
-    "...He got a gift receipt. For a HUG. I need this person's address so I can send them flowers."
-    "...Four months of 4:58am good mornings. That's not petty revenge, that's a psychological OPERATION."
-    "...She included a label on the crazy accusation. At that point you've won. You've simply won."
-    "...No camera. Just a sign. The audacity of that is actually sending me."
-  Make the reaction feel like the host is genuinely losing it — disbelieving, impressed, or making it even more absurd.
+    "...forty-seven catalogues. And one of them somehow knew his name. I'm not asking how."
+    "...a full roast chicken. WITH a candle. In a work fridge. That person is not well and I respect it deeply."
+    "...she blocked him everywhere and he had to text her MUM. And she just left that information sitting there. Unread. Unaddressed. Unhinged."
+    "...that wasn't me — as if the other 46 were fine. Completely normal. Just the one got away from him."
 
-Keep tight: question ≤ 30 words, each comment read + reaction ≤ 50 words total.
-Use "..." for pauses. ALL CAPS on the funniest words.
+Keep tight: question ≤ 30 words, each comment read + reaction ≤ 55 words total.
+Use "..." for pauses. ALL CAPS on the most shocking words.
 
 ━━ PEXELS SEARCH ━━
 Pick the most visually active/dynamic search term for this topic's vibe.
