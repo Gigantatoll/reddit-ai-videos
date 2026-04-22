@@ -45,7 +45,7 @@ SHOTSTACK_KEY   = os.getenv("SHOTSTACK_KEY",  "")
 PEXELS_KEY      = os.getenv("PEXELS_KEY",     "")
 
 SHOTSTACK_BASE      = "https://api.shotstack.io/edit/v1"
-ELEVENLABS_VOICE_ID = "VR6AewLTigWG4xSOukaG"
+ELEVENLABS_VOICE_ID = "onwK4e9ZLuTAKqWW03F9"   # Daniel — British, dry, warm, natural
 OUTPUT_FOLDER       = os.getenv("OUTPUT_FOLDER", "/Users/vincent/Desktop/Reddit AI Videos")
 ASSETS_DIR          = Path(os.getenv("ASSETS_DIR", "/Users/vincent/Desktop/Reddit AI Videos/assets"))
 TEMP_DIR            = Path("/tmp/reddit_video")
@@ -58,8 +58,12 @@ FALLBACK_SEARCHES = [
     "basketball freestyle",
     "bmx tricks extreme",
     "martial arts training",
-    "extreme sports action",
     "cooking fast satisfying",
+    "subway surfers gameplay",
+    "minecraft parkour",
+    "satisfying food compilation",
+    "city street walking",
+    "gym workout motivation",
 ]
 
 ASSETS_DIR.mkdir(parents=True, exist_ok=True)
@@ -172,9 +176,10 @@ Total per segment (comment + reaction): MAX 30 words.
 Use "..." for pauses. ALL CAPS on the single most painful word.
 
 ━━ PEXELS SEARCH ━━
-Pick the most visually active/dynamic search term for this topic's vibe.
+Pick the background that best matches the video's energy. Vary it — don't always pick the same one.
 Options: "parkour free running", "skateboard tricks", "basketball freestyle",
-"bmx tricks extreme", "martial arts training", "cooking fast satisfying"
+"bmx tricks extreme", "martial arts training", "cooking fast satisfying",
+"satisfying food compilation", "city street walking", "gym workout motivation"
 
 Return ONLY valid JSON:
 {{
@@ -477,11 +482,11 @@ def generate_voice_segments(segments: list) -> list:
         audio_gen = client.text_to_speech.convert(
             voice_id=ELEVENLABS_VOICE_ID,
             text=seg,
-            model_id="eleven_turbo_v2_5",
+            model_id="eleven_multilingual_v2",  # higher quality than turbo
             voice_settings={
-                "stability":         0.20,   # more natural variation
+                "stability":         0.45,   # consistent but not robotic
                 "similarity_boost":  0.80,
-                "style":             0.92,   # very expressive / reactive
+                "style":             0.55,   # natural, not over-dramatic
                 "use_speaker_boost": True,
             }
         )
@@ -743,9 +748,9 @@ def make_reddit_video(topic: str) -> str:
         audio_gen = client.text_to_speech.convert(
             voice_id=ELEVENLABS_VOICE_ID,
             text=outro_txt,
-            model_id="eleven_turbo_v2_5",
-            voice_settings={"stability": 0.20, "similarity_boost": 0.80,
-                            "style": 0.92, "use_speaker_boost": True}
+            model_id="eleven_multilingual_v2",
+            voice_settings={"stability": 0.45, "similarity_boost": 0.80,
+                            "style": 0.55, "use_speaker_boost": True}
         )
         outro_bytes = b"".join(audio_gen)
         outro_path  = str(TEMP_DIR / "voice_outro.mp3")
