@@ -115,33 +115,43 @@ Topic hint: "{topic}"
 - Body: empty string.
 - Upvotes + fake timestamp (e.g. "38.4k", "6h")
 
-━━ COMMENTS — Gen Z energy ━━
+━━ COMMENTS — clean, punchy, unhinged ━━
+Write like a real Reddit comment — short sentences, no fluff, no rambling.
+Each comment MAX 2-3 sentences. Trim every word that doesn't earn its place.
 Think: oddly specific details, deadpan self-awareness, unexpected escalation, anticlimactic endings.
-NOT: boomer storytelling. YES: internet brain humour.
+NOT: long-winded boomer storytelling. YES: tight internet brain humour.
 
-Comment 1 (~29k): Funny and real. The kind of thing you'd actually do.
-Comment 2 (~11k): Goes somewhere weirder. Specific unhinged detail that makes it more believable.
-Comment 3 (~2.8k): Starts normal, escalates sideways into something nobody expected.
-  Must end with a single short deadpan sentence that makes it 10x funnier.
+Comment 1 (~29k): Funny and relatable. Short and clean. The kind of thing you'd actually do.
+Comment 2 (~11k): One specific unhinged detail that makes it weirder and more believable.
+Comment 3 (~2.8k): Starts normal, pivots sideways. MUST end with one deadpan sentence that makes it 10x funnier.
 
-Examples of Gen Z Reddit comment energy (for inspiration, don't copy):
-  "I changed his WiFi password to 'stopplayingmusic' and left it for 8 months. He figured it out eventually. We don't talk about it."
-  "I started learning their language specifically so I could understand what they were saying about me. It was not worth it. They were not interesting people."
-  "I reported their trampoline to the HOA four times. It's still there. I am still reporting it. This is year three."
+Good examples (style only — don't copy):
+  "Changed his WiFi password to 'stopplayingmusic'. He figured it out in 8 months. We don't talk about it."
+  "Reported their trampoline to the HOA four times. It's still there. This is year three."
+  "Learned their language to know what they were saying about me. Not worth it. Boring people."
 
 ━━ VOICE SCRIPT ━━
-British male, sounds genuinely entertained — like he's reading these for the first time.
-Laughs slightly at funny parts. Builds reactions. NOT a flat robot voice.
+British male, genuinely entertained — reading these for the first time.
+NOT a flat robot. Builds up, reacts, sounds like a real person having fun.
 
 MUST say upvote count out loud for each comment:
   - "Top comment — twenty-nine THOUSAND upvotes:"
   - "Eleven thousand upvotes on this one:"
   - "Two thousand eight hundred upvotes:"
 
-Segment 0 (question): Hook immediately. Big energy. Make it sound unmissable.
-  e.g. "Right, r-slash AskReddit. Someone asked: [question]. I need you to brace yourself."
-Segments 1-3: Read comment + react. Reactions: "...no.", "I'm sorry WHAT.", "bro.", "he did NOT.", "stop."
-Keep tight: question ≤ 35 words, each comment ≤ 40 words with reaction.
+Segment 0 (question): Hook immediately. Big energy. Make it unmissable.
+  e.g. "Right, r-slash AskReddit. Someone asked: [question]. Brace yourself."
+
+Segments 1-3: Read the comment, then add YOUR OWN outrageous reaction — a full sentence or two that's genuinely funny.
+  NOT just a one-word drop. Make an actual joke or observation about what just happened.
+  Examples of good host reactions:
+    "...I'm sorry, he put WHAT in the printer? That man needs to be studied."
+    "...She did all that and still left a five-star review. Iconic behaviour honestly."
+    "...Eight MONTHS. He sat with that password for eight months and said nothing. Respect."
+    "...Year three of reporting the trampoline. This is not petty revenge, this is a lifestyle."
+  The reaction should feel like a comedian reacting live — surprised, disbelieving, or making it even more absurd.
+
+Keep tight: question ≤ 30 words, each comment read + reaction ≤ 45 words total.
 Use "..." for pauses. ALL CAPS on the funniest words.
 
 ━━ PEXELS SEARCH ━━
@@ -165,10 +175,10 @@ Return ONLY valid JSON:
     {{ "author": "u/...", "upvotes": "2.8k",  "timestamp": "3h", "text": "..." }}
   ],
   "voice_segments": [
-    "Right, r-slash AskReddit. [question hook].",
-    "Top comment — twenty-nine THOUSAND upvotes: [answer 1]. ...[reaction].",
-    "Eleven thousand upvotes on this one: [answer 2]. ...[reaction].",
-    "Two thousand eight hundred upvotes: [answer 3]. ...[reaction]."
+    "Right, r-slash AskReddit. [question hook]. Brace yourself.",
+    "Top comment — twenty-nine THOUSAND upvotes: [read comment]. ...[outrageous host reaction sentence].",
+    "Eleven thousand upvotes on this one: [read comment]. ...[outrageous host reaction sentence].",
+    "Two thousand eight hundred upvotes: [read comment]. ...[outrageous host reaction sentence]."
   ],
   "pexels_search": "parkour free running",
   "caption": "Viral TikTok caption. Format: [punchy hook] [emoji] [hashtags]. Rules: hook must make someone stop scrolling — specific, funny or shocking (not generic). Always include #reddit + #askreddit. Add 2-3 topic-specific hashtags (e.g. #pettyrevenge #worktok #storytime #neighbour). Mix 1 big hashtag + niche ones. Under 150 chars total."
