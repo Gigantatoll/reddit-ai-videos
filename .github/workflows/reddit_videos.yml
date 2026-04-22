@@ -38,22 +38,26 @@ jobs:
       # ── 3. Run the scheduler ───────────────────────────────────────────────
       - name: Generate Reddit video
         env:
-          ANTHROPIC_KEY:   ${{ secrets.ANTHROPIC_KEY }}
-          ELEVENLABS_KEY:  ${{ secrets.ELEVENLABS_KEY }}
-          SHOTSTACK_KEY:   ${{ secrets.SHOTSTACK_KEY }}
-          PEXELS_KEY:      ${{ secrets.PEXELS_KEY }}
-          CLOUD_MODE:      "true"
-          OUTPUT_FOLDER:   "${{ github.workspace }}/output"
-          ASSETS_DIR:      "${{ github.workspace }}/assets"
+          ANTHROPIC_KEY:    ${{ secrets.ANTHROPIC_KEY }}
+          ELEVENLABS_KEY:   ${{ secrets.ELEVENLABS_KEY }}
+          SHOTSTACK_KEY:    ${{ secrets.SHOTSTACK_KEY }}
+          PEXELS_KEY:       ${{ secrets.PEXELS_KEY }}
+          BOT_PUSH_TOKEN:   ${{ secrets.BOT_PUSH_TOKEN }}
+          CLOUD_MODE:       "true"
+          OUTPUT_FOLDER:    "${{ github.workspace }}/output"
+          ASSETS_DIR:       "${{ github.workspace }}/assets"
         run: |
           mkdir -p output assets
           python scheduler.py
 
       # ── 4. Commit results back to repo ─────────────────────────────────────
       - name: Commit video results
+        env:
+          BOT_PUSH_TOKEN: ${{ secrets.BOT_PUSH_TOKEN }}
         run: |
           git config user.name  "Reddit Bot"
           git config user.email "bot@reddit-videos.local"
+          git remote set-url origin https://Gigantatoll:${BOT_PUSH_TOKEN}@github.com/Gigantatoll/reddit-ai-videos.git
           git add output/ topics.json scheduler.log || true
           git diff --cached --quiet || git commit -m "🎬 Auto-generated video $(date +'%Y-%m-%d %H:%M UTC')"
-          git push
+          git push origin main

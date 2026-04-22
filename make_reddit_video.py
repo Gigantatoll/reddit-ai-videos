@@ -794,8 +794,7 @@ def push_to_dashboard(video_path: str, topic: str, caption: str):
     import base64
     from datetime import datetime, timezone
 
-    GITHUB_TOKEN = os.getenv("GITHUB_TOKEN_PUSH",
-                             "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")
+    GITHUB_TOKEN = os.getenv("BOT_PUSH_TOKEN", "")
     REPO = "Gigantatoll/reddit-ai-videos"
     GH_HEADERS = {
         "Authorization": f"token {GITHUB_TOKEN}",
