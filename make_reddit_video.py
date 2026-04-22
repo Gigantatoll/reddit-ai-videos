@@ -115,51 +115,56 @@ Topic hint: "{topic}"
 - Body: empty string.
 - Upvotes + fake timestamp (e.g. "38.4k", "6h")
 
-━━ COMMENTS — short, clean, UNHINGED AND SHOCKING ━━
-Write like the single most unhinged comment in a viral Reddit thread that made everyone lose it.
-Each comment MAX 2-3 sentences. Punchy, no filler.
+━━ COMMENTS — relatable, clear, universally funny ━━
+The #1 rule: a 14-year-old and a 50-year-old should both immediately get the joke. No inside references, no abstract humour, no made-up nonsense. The joke must be obvious the first time you read it.
 
-These are REAL stories from real (slightly insane) people. They must be believable — but the detail that makes them funny is that the person went WAY further than any normal human would, with complete calm and zero remorse.
+The humour comes from RECOGNITION — the reader thinks "oh my god I know someone like this" or "I would actually do this." Real situations, real emotions, but taken one step too far in a way everyone instantly understands.
 
-The formula: start normal → one completely out-of-pocket detail → deadpan ending that shows they have no regrets.
+STRUCTURE of each comment:
+1. Set up a situation everyone has been in (annoying boss, bad neighbour, messy flatmate, awkward date, etc.)
+2. Show what the person did about it — something clear and specific
+3. End with the one detail or sentence that makes it funny — the punchline must be OBVIOUS, not subtle
 
-BANNED: anything a normal person would do. BANNED: vague or soft punchlines. BANNED: "I stopped talking to them."
-REQUIRED: a specific, absurd action. Something that makes people pause and re-read it. Something that gets screenshotted.
+RULES:
+- Never make up something so bizarre that people have to think about why it's funny. If it needs explaining, rewrite it.
+- The situation must be something everyone has experienced or can immediately picture.
+- The funny part should hit instantly — like a punchline in a stand-up joke.
+- Real specific details make it funnier (a number, a name, a specific object) but only if they make the joke clearer, not more confusing.
 
-Comment 1 (~29k): The person did something petty but genius. Sounds almost reasonable until the last sentence reveals it wasn't.
-  BAD: "I started ignoring my neighbour after the noise complaints."
-  GOOD: "Signed my neighbour up for every free catalogue I could find. 47 in total. He started getting mail addressed to 'The Resident Who Parks Like An Idiot'. That one wasn't me."
+Comment 1 (~29k): A situation everyone knows. The person's reaction is slightly too petty or extra — but totally understandable. Instantly funny.
+  GOOD: "My boss kept microwaving fish in the office. I started bringing in a scented candle, lighting it at my desk, and saying 'oh sorry, is this bothering anyone?' every single time. He stopped after a week."
+  GOOD: "My neighbour kept parking in my spot so I bought an orange cone and put it there every morning. He complained to the landlord that someone was stealing his spot. The cone has a name now. His name is Gerald."
 
-Comment 2 (~11k): Full escalation. This person committed. The level of effort is what makes it insane. Specific numbers, timeframes, or details that show how far they went.
-  BAD: "I got back at my boss by quitting dramatically."
-  GOOD: "My coworker stole my lunch so I started making increasingly unhinged lunches to protect them. Week 3 was a full roast chicken with a fork and knife, a candle, and a handwritten note that said 'please'. Nobody touched it. Nobody asked questions either."
+Comment 2 (~11k): Escalation that everyone can follow. The person went further than necessary but you completely understand why. The funny part is HOW committed they were, not what they did.
+  GOOD: "My coworker kept eating my clearly labelled food from the fridge. I started labelling it with fake spice warnings. 'CAUTION: extremely spicy.' It wasn't spicy. He still didn't eat it. He told HR the labels were threatening. I got called into a meeting about a sandwich."
+  GOOD: "My flatmate never washed dishes so I bought myself one plate, one cup, one fork, and kept them in my room. He didn't notice for three weeks. When he finally asked where all the dishes went I said 'I don't know.' We both know."
 
-Comment 3 (~2.8k): Starts completely normal. Takes one turn that nobody sees coming. The final sentence must be so deadpan it sounds like a threat or a confession. This is the one that breaks people.
-  BAD: "My ex was awful so I moved on and met someone better."
-  GOOD: "After my breakup I deep cleaned his entire apartment, reorganised everything, left a scented candle burning, and blocked him on everything. He texted my mum to say thank you. I have never responded to that information."
+Comment 3 (~2.8k): Starts totally normal. Lands one final sentence that reframes everything and makes it 10x funnier. The punchline must be crystal clear — no ambiguity.
+  GOOD: "My ex used to say I never planned anything romantic. So after we broke up I planned an entire dinner, flowers, reservation, the works. Took myself. Had a great time. The waiter asked if I was waiting for someone. I said no. He gave me extra bread."
+  GOOD: "Went to my school reunion dreading it because I hadn't achieved much. Turned out almost nobody came. Me and two other people sat in a school hall with a buffet meant for 80. We ate everything. Best night of my life. We're still friends."
 
 ━━ VOICE SCRIPT ━━
-British male, genuinely entertained — like he's reading these for the first time and can barely hold it together.
-NOT robotic. He sounds like a comedian at a live show who just got told something insane.
+British male, genuinely entertained — sounds like he's reading these for the first time and loving every second.
+Warm, funny, like a mate telling you a story. NOT robotic, NOT over the top.
 
 MUST say upvote count out loud for each comment:
   - "Top comment — twenty-nine THOUSAND upvotes:"
   - "Eleven thousand upvotes on this one:"
   - "Two thousand eight hundred upvotes:"
 
-Segment 0 (question): Hook immediately. Big energy. Make it sound unmissable.
-  e.g. "Right, r-slash AskReddit asks: [question]. I was not prepared for these answers."
+Segment 0 (question): Hook immediately. Pull the viewer in. Make it sound like the answers are going to be incredible.
+  e.g. "Right, someone on r-slash AskReddit asked: [question]. And the answers did NOT disappoint."
 
-Segments 1-3: Read the comment, then deliver a reaction that is genuinely funny on its own — not just a response, but a comedic take. Call out the most insane specific detail. Make an observation that escalates it further or reframes it in an even more absurd way.
-  The reaction must make the viewer laugh AGAIN after already laughing at the comment.
-  Examples of the energy:
-    "...forty-seven catalogues. And one of them somehow knew his name. I'm not asking how."
-    "...a full roast chicken. WITH a candle. In a work fridge. That person is not well and I respect it deeply."
-    "...she blocked him everywhere and he had to text her MUM. And she just left that information sitting there. Unread. Unaddressed. Unhinged."
-    "...that wasn't me — as if the other 46 were fine. Completely normal. Just the one got away from him."
+Segments 1-3: Read the comment clearly, then react naturally — like someone who just heard something brilliant. The reaction should highlight the funniest part of the comment so even if someone missed it, the reaction makes them go back and laugh again.
+  The reaction must be warm and funny, not try-hard. Like a mate saying "no way" or "I can't believe that worked."
+  Examples:
+    "...Gerald. He named the cone Gerald. I'm sorry but that cone has more rights than that neighbour."
+    "...called into a meeting. About a sandwich. I need that to sink in for a second."
+    "...extra bread. The waiter gave him extra bread for being brave enough to be alone. That's character development."
+    "...they ate EVERYTHING. The whole buffet. Meant for eighty people. Just the three of them. Iconic."
 
 Keep tight: question ≤ 30 words, each comment read + reaction ≤ 55 words total.
-Use "..." for pauses. ALL CAPS on the most shocking words.
+Use "..." for pauses. ALL CAPS on the funniest word in each segment.
 
 ━━ PEXELS SEARCH ━━
 Pick the most visually active/dynamic search term for this topic's vibe.
