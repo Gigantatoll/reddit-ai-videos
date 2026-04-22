@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reddit AI Videos</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #e6edf3; min-height: 100vh; padding: 32px 24px; }
+  header { text-align: center; margin-bottom: 40px; }
+  header h1 { font-size: 2rem; font-weight: 700; color: #ff4500; margin-bottom: 6px; }
+  header p { color: #8b949e; font-size: 0.95rem; }
+  #status { text-align: center; color: #8b949e; font-size: 0.9rem; margin-bottom: 16px; }
+  .refresh-btn { display: block; margin: 0 auto 32px; padding: 10px 24px; background: #21262d; border: 1px solid #30363d; border-radius: 8px; color: #e6edf3; font-size: 0.875rem; cursor: pointer; }
+  .refresh-btn:hover { background: #30363d; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; max-width: 1100px; margin: 0 auto; }
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.15s, box-shadow 0.15s; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(255,69,0,0.15); }
+  .card-header { background: #1f2937; padding: 14px 18px; font-size: 0.8rem; color: #8b949e; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #ff4500; }
+  .badge { display: inline-block; background: #1a3a1a; color: #3fb950; border: 1px solid #3fb950; border-radius: 20px; padding: 2px 10px; font-size: 0.72rem; font-weight: 600; margin-left: 8px; }
+  .card-body { padding: 18px; flex: 1; }
+  .card-body h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 12px; line-height: 1.4; }
+  .caption-box { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 12px; font-size: 0.8rem; color: #8b949e; line-height: 1.5; white-space: pre-wrap; max-height: 120px; overflow-y: auto; margin-bottom: 14px; }
+  .btn-row { display: flex; gap: 10px; }
+  .btn { flex: 1; padding: 10px 14px; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; transition: opacity 0.15s; }
+  .btn:hover { opacity: 0.85; }
+  .btn-download { background: #ff4500; color: #fff; }
+  .btn-copy { background: #21262d; color: #e6edf3; border: 1px solid #30363d; }
+  .btn-copy.copied { background: #1a7f37; border-color: #1a7f37; color: #fff; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎬 Reddit AI Videos</h1>
+  <p>Auto-generated daily — 8am &amp; 7pm Hamburg time</p>
+</header>
+<p id="status">Loading your videos...</p>
+<button class="refresh-btn" onclick="loadVideos()">↻ Refresh</button>
+<div class="grid" id="grid"></div>
+<script>
+const REPO = "Gigantatoll/reddit-ai-videos";
+
+async function apiFetch(path) {
+  const r = await fetch("https://api.github.com/repos/"+REPO+"/"+path, {
+    headers: { Accept: "application/vnd.github.v3+json" }
+  });
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+function extractInfo(md) {
+  const urlMatch = md.match(/https?:\/\/tmpfiles\.org\/dl\/[^\s\)]+/) ||
+                   md.match(/https?:\/\/[^\s\)]+\.mp4/) ||
+                   md.match(/https?:\/\/cdn\.shotstack\.io\/[^\s\)]+/);
+  const videoUrl = urlMatch ? urlMatch[0] : "";
+  const capM  = md.match(/```\n([\s\S]*?)\n```/);
+  const caption = capM ? capM[1].trim() : "";
+  const topM  = md.match(/\*\*Topic:\*\*\s*(.+)/);
+  const topic = topM ? topM[1].trim() : "Reddit Story";
+  return { videoUrl, caption, topic };
+}
+
+function formatDate(name) {
+  const m = name.match(/(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})/);
+  if (!m) return name;
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return months[+m[2]-1]+" "+m[3]+", "+m[1]+" · "+m[4]+":"+m[5]+" UTC";
+}
+
+function copyCaption(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = "✓ Copied!";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "Copy Caption"; btn.classList.remove("copied"); }, 2000);
+  });
+}
+
+async function loadVideos() {
+  const status = document.getElementById("status");
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  status.textContent = "Fetching latest videos...";
+  try {
+    let files;
+    try { files = await apiFetch("contents/output"); }
+    catch { status.textContent = "No videos yet — first one at 8am Hamburg time!"; return; }
+
+    const mdFiles = files.filter(f => f.name.endsWith(".md"))
+                         .sort((a,b) => b.name.localeCompare(a.name));
+    if (!mdFiles.length) { status.textContent = "No videos yet!"; return; }
+    status.textContent = mdFiles.length + " video" + (mdFiles.length>1?"s":"") + " generated so far";
+    const today = new Date().toISOString().slice(0,10);
+
+    for (const file of mdFiles) {
+      const r  = await fetch(file.download_url);
+      const md = await r.text();
+      const { videoUrl, caption, topic } = extractInfo(md);
+      const isNew = file.name.startsWith(today);
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML =
+        '<div class="card-header"><div class="dot"></div>'+formatDate(file.name)+
+        (isNew ? '<span class="badge">NEW</span>' : '')+'</div>'+
+        '<div class="card-body"><h3>'+topic+'</h3>'+
+        '<div class="caption-box">'+(caption||"(caption not found)")+'</div>'+
+        '<div class="btn-row">'+
+        (videoUrl
+          ? '<a class="btn btn-download" href="'+videoUrl+'" target="_blank">⬇ Download</a>'
+          : '<span class="btn btn-download" style="opacity:0.4;cursor:default">Rendering...</span>')+
+        '<button class="btn btn-copy" onclick="copyCaption(this,'+JSON.stringify(caption)+')">Copy Caption</button>'+
+        '</div></div>';
+      grid.appendChild(card);
+    }
+  } catch(err) { status.textContent = "Error: "+err.message; }
+}
+loadVideos();
+</script>
+</body>
+</html>

@@ -30,11 +30,19 @@ from mutagen.mp3 import MP3
 from PIL import Image, ImageDraw, ImageFont
 from elevenlabs.client import ElevenLabs
 
-# ── API Keys — read from env vars first, fall back to hardcoded local values ──
-ANTHROPIC_KEY   = os.getenv("ANTHROPIC_KEY",  "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")
-ELEVENLABS_KEY  = os.getenv("ELEVENLABS_KEY", "sk_8bbb2b80fd99371fd2201069173793a0f722fadc4c43f869")
-SHOTSTACK_KEY   = os.getenv("SHOTSTACK_KEY",  "5u98JJzPDMP3xMu6MhQchPGZi5ioFoJi9RIto4lQ")
-PEXELS_KEY      = os.getenv("PEXELS_KEY",     "YjGDUDD9tnMhxbc6RdUmVOLBO8NNrvkuSH2nG0RolFEgNu6UEXEIdJcw")
+# ── Load .env file if running locally ────────────────────────────────────────
+_env_path = Path(__file__).parent / ".env"
+if _env_path.exists():
+    for _line in _env_path.read_text().splitlines():
+        if "=" in _line and not _line.startswith("#"):
+            _k, _v = _line.split("=", 1)
+            os.environ.setdefault(_k.strip(), _v.strip())
+
+# ── API Keys — loaded from environment variables (set locally via .env or GitHub Secrets) ──
+ANTHROPIC_KEY   = os.getenv("ANTHROPIC_KEY",  "")
+ELEVENLABS_KEY  = os.getenv("ELEVENLABS_KEY", "")
+SHOTSTACK_KEY   = os.getenv("SHOTSTACK_KEY",  "")
+PEXELS_KEY      = os.getenv("PEXELS_KEY",     "")
 
 SHOTSTACK_BASE      = "https://api.shotstack.io/edit/v1"
 ELEVENLABS_VOICE_ID = "VR6AewLTigWG4xSOukaG"

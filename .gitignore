@@ -13,3 +13,11 @@ assets/
 
 # macOS junk
 .DS_Store
+
+# Local API keys — never commit these
+.env
+downloaded.json
+downloader.log
+scheduler.log
+auto_download.py
+run_downloader.sh
