@@ -790,7 +790,7 @@ def make_reddit_video(topic: str) -> str:
 
 
 def push_to_dashboard(video_path: str, topic: str, caption: str):
-    """Upload video to tmpfiles.org and commit a markdown card to GitHub."""
+    """Upload video to GitHub Releases and commit a markdown card to GitHub."""
     import base64
     from datetime import datetime, timezone
 
@@ -801,18 +801,46 @@ def push_to_dashboard(video_path: str, topic: str, caption: str):
         "Accept": "application/vnd.github.v3+json"
     }
 
-    # 1 — Upload video to tmpfiles.org
-    print("\n  📤 Uploading to dashboard...")
+    # 1 — Upload video to GitHub Releases
+    print("\n  📤 Uploading to GitHub Releases...")
+    now = datetime.now(timezone.utc)
+    tag = now.strftime("video-%Y-%m-%d-%H-%M-UTC")
+    video_filename = os.path.basename(video_path)
+
+    # Create the release
+    release_resp = requests.post(
+        f"https://api.github.com/repos/{REPO}/releases",
+        headers=GH_HEADERS,
+        json={
+            "tag_name": tag,
+            "name": f"Reddit Video — {now.strftime('%Y-%m-%d %H:%M UTC')}",
+            "body": topic,
+            "draft": False,
+            "prerelease": False,
+        },
+        timeout=30
+    )
+    release_resp.raise_for_status()
+    release_id = release_resp.json()["id"]
+
+    # Upload the video as a release asset
+    upload_headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Content-Type": "video/mp4",
+    }
     with open(video_path, "rb") as f:
-        r = requests.post("https://tmpfiles.org/api/v1/upload", files={"file": f},
-                          timeout=120)
-    r.raise_for_status()
-    raw_url   = r.json()["data"]["url"]
-    video_url = raw_url.replace("tmpfiles.org/", "tmpfiles.org/dl/")
+        upload_resp = requests.post(
+            f"https://uploads.github.com/repos/{REPO}/releases/{release_id}/assets"
+            f"?name={video_filename}",
+            headers=upload_headers,
+            data=f,
+            timeout=300
+        )
+    upload_resp.raise_for_status()
+    video_url = upload_resp.json()["browser_download_url"]
     print(f"  Hosted at: {video_url}")
 
     # 2 — Build markdown content
-    now      = datetime.now(timezone.utc)
     filename = now.strftime("%Y-%m-%d_%H-%M-UTC") + ".md"
     md = f"""# Reddit Video — {now.strftime('%Y-%m-%d %H:%M UTC')}
 
@@ -839,7 +867,7 @@ def push_to_dashboard(video_path: str, topic: str, caption: str):
         timeout=30
     )
     resp.raise_for_status()
-    print(f"  ✅ Dashboard updated → open dashboard.html to see it!")
+    print(f"  ✅ Dashboard updated → https://gigantatoll.github.io/reddit-ai-videos/")
 
 
 if __name__ == "__main__":
