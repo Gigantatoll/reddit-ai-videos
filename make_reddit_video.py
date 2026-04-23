@@ -320,47 +320,73 @@ def _font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
     return ImageFont.load_default()
 
 
-def render_caption_image(text: str, emphasized_words: set, index: int) -> str:
+def render_word_chunk(words: list, index: int, y_fraction: float = 0.5) -> str:
     """
-    Render a caption line as a transparent PNG with white text + thick black stroke.
-    Uses PIL stroke_width — guaranteed to work, same as Reddit cards.
+    Render 2-3 words into a FULL 1080x1920 transparent canvas so Shotstack
+    never has to position or scale anything — text is pixel-perfect every time.
+
+    y_fraction: 0.0 = top, 0.5 = center, 0.75 = lower third (below question card)
     """
-    W          = 1080   # full video width
-    font_size  = 58
-    stroke_w   = 8
-    line_gap   = 14
+    VW, VH   = 720, 1280   # Shotstack "hd" 9:16 = 720×1280
+    PAD      = 50
+    stroke_w = 8
+    text     = " ".join(w["word"] for w in words).upper()
 
-    font       = _font(font_size, bold=True)
-    lines      = textwrap.wrap(text.upper(), width=17)  # ~17 chars fits safely at 58px
+    # Auto-size: largest font that fits horizontally with padding
+    dummy = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+    font_size = 60
+    while font_size >= 28:
+        font = _font(font_size, bold=True)
+        bb   = dummy.textbbox((0, 0), text, font=font, stroke_width=stroke_w)
+        if (bb[2] - bb[0]) <= VW - PAD * 2:
+            break
+        font_size -= 4
 
-    dummy      = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
-    line_h     = dummy.textbbox((0, 0), "Ag", font=font, stroke_width=stroke_w)[3] + line_gap
-    H          = line_h * len(lines) + 30
+    bb = dummy.textbbox((0, 0), text, font=font, stroke_width=stroke_w)
+    tw = bb[2] - bb[0]
+    th = bb[3] - bb[1]
 
-    img  = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    # Full video canvas — completely transparent
+    img  = Image.new("RGBA", (VW, VH), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
 
-    y = 15
-    for line in lines:
-        words_in_line = line.split()
-        # Center the line; clamp so it never starts outside the canvas
-        full_bbox = draw.textbbox((0, 0), line, font=font, stroke_width=stroke_w)
-        line_w    = full_bbox[2] - full_bbox[0]
-        x         = max(stroke_w, (W - line_w) // 2)
+    # Center text block at y_fraction of video height
+    x = (VW - tw) // 2
+    y = int(VH * y_fraction) - th // 2
 
-        for word in words_in_line:
-            clean = word.strip(".,!?:\"'")
-            color = (255, 0, 0, 255) if clean in emphasized_words else (255, 255, 255, 255)
-            draw.text((x, y), word, font=font, fill=color,
-                      stroke_width=stroke_w, stroke_fill=(0, 0, 0, 255))
-            wb = draw.textbbox((0, 0), word + " ", font=font, stroke_width=stroke_w)
-            x += wb[2] - wb[0]
+    for w in words:
+        color = (255, 0, 0, 255) if w.get("emphasized") else (255, 255, 255, 255)
+        draw.text((x, y), w["word"].upper(), font=font, fill=color,
+                  stroke_width=stroke_w, stroke_fill=(0, 0, 0, 255))
+        wb = draw.textbbox((0, 0), w["word"].upper() + " ", font=font, stroke_width=stroke_w)
+        x += wb[2] - wb[0]
 
-        y += line_h
-
-    path = str(TEMP_DIR / f"caption_{index}.png")
+    path = str(TEMP_DIR / f"cap_chunk_{index}.png")
     img.save(path, "PNG")
     return path
+
+
+_chunk_counter = 0
+
+def make_caption_chunks(words: list, y_fraction: float = 0.5) -> list:
+    """
+    Split word list into chunks of 3, return list of:
+      {path, start_offset, duration}
+    y_fraction controls vertical position baked into the image.
+    """
+    global _chunk_counter
+    CHUNK  = 3
+    chunks = []
+    for i in range(0, len(words), CHUNK):
+        group = words[i : i + CHUNK]
+        path  = render_word_chunk(group, _chunk_counter, y_fraction=y_fraction)
+        _chunk_counter += 1
+        chunks.append({
+            "path":         path,
+            "start_offset": group[0]["start"],
+            "duration":     max(group[-1]["end"] - group[0]["start"], 0.08),
+        })
+    return chunks
 
 
 def _rounded_rect(draw: ImageDraw.Draw, xy, radius: int, fill: tuple):
@@ -669,21 +695,24 @@ DING_VOLUME  = 0.75
 
 def build_timeline(card_urls: list, audio_info: list,
                    ding_url: str, music_url: str, bg_video_url: str,
-                   caption_urls: list = None) -> dict:
-
+                   caption_data: list = None) -> dict:
+    """
+    caption_data: list (one entry per segment) of lists of chunk dicts:
+      [{url, start_offset, duration}, ...]
+    Each chunk is shown for exactly the time those words are spoken.
+    """
     image_clips   = []
     voice_clips   = []
     caption_clips = []
     cursor        = 0.0
 
-    card_iter    = iter(card_urls)
-    caption_iter = iter(caption_urls or [])
+    card_iter = iter(card_urls)
 
     for i, info in enumerate(audio_info):
         dur   = info["duration"]
         trans = TRANSITIONS[i] if i < len(TRANSITIONS) else {"in": "fade", "out": "fade"}
 
-        # Question card (i==0) only — answers shown via captions
+        # Question card (i==0) only
         if i == 0 and not info.get("is_outro"):
             card_url = next(card_iter)
             image_clips.append({
@@ -694,30 +723,16 @@ def build_timeline(card_urls: list, audio_info: list,
                 "transition": trans,
             })
 
-        # PIL caption image for every non-outro segment
-        if not info.get("is_outro") and caption_urls:
-            cap_url = next(caption_iter, None)
-            if cap_url:
-                if i == 0:
-                    # Hook: sit below the question card (bottom area)
-                    caption_clips.append({
-                        "asset":    {"type": "image", "src": cap_url},
-                        "start":    round(cursor, 3),
-                        "length":   round(dur, 3),
-                        "position": "bottom",
-                        "offset":   {"x": 0.0, "y": -0.05},
-                        "fit":      "none",
-                    })
-                else:
-                    # Answers: dead center of the screen
-                    caption_clips.append({
-                        "asset":    {"type": "image", "src": cap_url},
-                        "start":    round(cursor, 3),
-                        "length":   round(dur, 3),
-                        "position": "center",
-                        "offset":   {"x": 0.0, "y": 0.0},
-                        "fit":      "none",
-                    })
+        # Word-chunk captions timed to the voice
+        # Position is baked into the full 1080x1920 image — just crop to fill
+        seg_chunks = (caption_data[i] if caption_data and i < len(caption_data) else []) or []
+        for chunk in seg_chunks:
+            caption_clips.append({
+                "asset":  {"type": "image", "src": chunk["url"]},
+                "start":  round(cursor + chunk["start_offset"], 3),
+                "length": round(chunk["duration"], 3),
+                "fit":    "crop",
+            })
 
         voice_clips.append({
             "asset":  {"type": "audio", "src": info["url"], "volume": 1.0},
@@ -892,27 +907,33 @@ def make_reddit_video(topic: str) -> str:
     print(f"      Search:  {search}")
     print(f"      Caption: {caption}")
 
-    print("\n[2/7] Rendering question card + caption images...")
+    print("\n[2/7] Rendering question card...")
     question_card = render_post_card(post, pkg["subreddit"])
     card_paths    = [save_card_png(question_card, 0)]
     print("      Question card done.")
 
-    # Render one PIL caption image per voice segment (PIL stroke_width = real outline)
-    caption_paths = []
-    for idx, seg in enumerate(segments):
-        emphasized = {w.strip(".,!?:\"'").upper() for w in seg.split()
-                      if w.strip(".,!?:\"'").isupper() and len(w.strip(".,!?:\"'")) > 1}
-        cp = render_caption_image(seg, emphasized, idx)
-        caption_paths.append(cp)
-        print(f"      Caption {idx+1} rendered.")
-
 
     MIN_DURATION = 62  # TikTok Creativity Program requires 60s+ to monetise
 
-    print("\n[3/7] ElevenLabs voiceovers...")
+    print("\n[3/7] ElevenLabs voiceovers + caption chunks...")
     audio_info = generate_voice_segments(segments)
     total_dur  = sum(a["duration"] for a in audio_info)
     print(f"      Total: {total_dur:.1f}s")
+
+    # Build word-chunk caption images for each segment (timed to the voice)
+    # Hook (i==0): text sits below question card at 75% down the screen
+    # Answers (i>0): text dead center (50%)
+    caption_data = []
+    chunk_count  = 0
+    for seg_idx, seg_info in enumerate(audio_info):
+        if seg_info.get("is_outro") or not seg_info.get("words"):
+            caption_data.append([])
+            continue
+        y_frac = 0.75 if seg_idx == 0 else 0.50
+        chunks = make_caption_chunks(seg_info["words"], y_fraction=y_frac)
+        caption_data.append(chunks)
+        chunk_count += len(chunks)
+    print(f"      {chunk_count} caption chunks rendered.")
 
     # ── Minimum duration check ────────────────────────────────────────────────
     # If video is under 62s, add a short outro so it always qualifies for
@@ -951,10 +972,13 @@ def make_reddit_video(topic: str) -> str:
     for i, cp in enumerate(card_paths):
         card_urls.append(upload(cp, "image/png"))
         print(f"      Card {i+1} uploaded.")
-    caption_urls = []
-    for i, cp in enumerate(caption_paths):
-        caption_urls.append(upload(cp, "image/png"))
-        print(f"      Caption {i+1} uploaded.")
+    total_chunks = sum(len(c) for c in caption_data)
+    uploaded = 0
+    for seg_chunks in caption_data:
+        for chunk in seg_chunks:
+            chunk["url"] = upload(chunk["path"], "image/png")
+            uploaded += 1
+    print(f"      {uploaded} caption chunks uploaded.")
     for i, info in enumerate(audio_info):
         info["url"] = upload(info["path"], "audio/mpeg")
         print(f"      Voice {i+1} uploaded. ({info['duration']:.1f}s)")
@@ -978,7 +1002,7 @@ def make_reddit_video(topic: str) -> str:
         t += info["duration"]
 
     timeline  = build_timeline(card_urls, audio_info, ding_url, music_url, bg_video_url,
-                               caption_urls=caption_urls)
+                               caption_data=caption_data)
     render_id = shotstack_render(timeline)
     final_url = shotstack_poll(render_id)
 
