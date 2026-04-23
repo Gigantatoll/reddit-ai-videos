@@ -383,21 +383,24 @@ def render_post_card(post: dict, subreddit: str) -> Image.Image:
     # ── Header: subreddit icon + name + meta ──
     circ = 38
     _profile_circle(draw, PAD, y + 4, circ, (255, 69, 0), "r")
-    draw.text((PAD + circ + 12, y + 2),  subreddit, font=f_sub,  fill=R_ORANGE)
+    draw.text((PAD + circ + 12, y + 2),  subreddit, font=f_sub,  fill=R_ORANGE,
+              stroke_width=1, stroke_fill=(0, 0, 0, 200))
     draw.text((PAD + circ + 12, y + 30), f"Posted by {post['author']} · {post.get('timestamp','4h')}",
-              font=f_meta, fill=R_MUTED)
+              font=f_meta, fill=R_MUTED, stroke_width=1, stroke_fill=(0, 0, 0, 180))
     y += header_h + 18
 
     # ── Title ──
     for line in title_lines:
-        draw.text((PAD, y), line, font=f_title, fill=R_TEXT)
+        draw.text((PAD, y), line, font=f_title, fill=R_TEXT,
+                  stroke_width=2, stroke_fill=(0, 0, 0, 255))
         y += 56
 
     # ── Body ──
     if body_lines:
         y += 14
         for line in body_lines:
-            draw.text((PAD, y), line, font=f_body, fill=R_MUTED)
+            draw.text((PAD, y), line, font=f_body, fill=R_MUTED,
+                      stroke_width=1, stroke_fill=(0, 0, 0, 200))
             y += 40
 
     y += 18
@@ -407,9 +410,12 @@ def render_post_card(post: dict, subreddit: str) -> Image.Image:
     y += 15
 
     # ── Footer: upvotes | comments | share ──
-    draw.text((PAD,       y), f"▲  {post['upvotes']}  ▼", font=f_footer, fill=R_MUTED)
-    draw.text((PAD + 180, y), "💬  Comments",              font=f_footer, fill=R_MUTED)
-    draw.text((PAD + 360, y), "↗  Share",                  font=f_footer, fill=R_MUTED)
+    draw.text((PAD,       y), f"▲  {post['upvotes']}  ▼", font=f_footer, fill=R_MUTED,
+              stroke_width=1, stroke_fill=(0, 0, 0, 180))
+    draw.text((PAD + 180, y), "💬  Comments",              font=f_footer, fill=R_MUTED,
+              stroke_width=1, stroke_fill=(0, 0, 0, 180))
+    draw.text((PAD + 360, y), "↗  Share",                  font=f_footer, fill=R_MUTED,
+              stroke_width=1, stroke_fill=(0, 0, 0, 180))
 
     return _on_frame(card)
 
@@ -453,21 +459,27 @@ def render_comment_card(comment: dict) -> Image.Image:
                     author[2] if len(author) > 2 else "u")
 
     draw.text((content_x + circ + 10, y + 2),  author,
-              font=f_author, fill=R_ORANGE)
+              font=f_author, fill=R_ORANGE,
+              stroke_width=1, stroke_fill=(0, 0, 0, 200))
     draw.text((content_x + circ + 10, y + 28), f"· {comment.get('timestamp','3h')}",
-              font=f_meta,   fill=R_MUTED)
+              font=f_meta,   fill=R_MUTED,
+              stroke_width=1, stroke_fill=(0, 0, 0, 180))
     y += header_h + 14
 
     # ── Comment text ──
     for line in text_lines:
-        draw.text((content_x, y), line, font=f_text, fill=R_TEXT)
+        draw.text((content_x, y), line, font=f_text, fill=R_TEXT,
+                  stroke_width=2, stroke_fill=(0, 0, 0, 255))
         y += 50
     y += 14
 
     # ── Footer: upvotes | reply | share ──
-    draw.text((content_x,       y), f"▲  {comment['upvotes']}  ▼", font=f_footer, fill=R_MUTED)
-    draw.text((content_x + 170, y), "↩  Reply",                     font=f_footer, fill=R_MUTED)
-    draw.text((content_x + 290, y), "↗  Share",                     font=f_footer, fill=R_MUTED)
+    draw.text((content_x,       y), f"▲  {comment['upvotes']}  ▼", font=f_footer, fill=R_MUTED,
+              stroke_width=1, stroke_fill=(0, 0, 0, 180))
+    draw.text((content_x + 170, y), "↩  Reply",                     font=f_footer, fill=R_MUTED,
+              stroke_width=1, stroke_fill=(0, 0, 0, 180))
+    draw.text((content_x + 290, y), "↗  Share",                     font=f_footer, fill=R_MUTED,
+              stroke_width=1, stroke_fill=(0, 0, 0, 180))
 
     return _on_frame(card)
 
@@ -523,7 +535,7 @@ def generate_voice_segments(segments: list) -> list:
     results = []
 
     for i, seg in enumerate(segments):
-        response = client.text_to_speech.convert_with_timestamps(
+        audio_gen = client.text_to_speech.convert(
             voice_id=ELEVENLABS_VOICE_ID,
             text=seg,
             model_id="eleven_multilingual_v2",
@@ -534,50 +546,16 @@ def generate_voice_segments(segments: list) -> list:
                 "use_speaker_boost": True,
             }
         )
-        import base64
-        audio_bytes = base64.b64decode(response.audio_base_64)
+        audio_bytes = b"".join(audio_gen)
         path = str(TEMP_DIR / f"voice_{i}.mp3")
         with open(path, "wb") as f:
             f.write(audio_bytes)
 
-        # Extract word-level timestamps + mark which words were ALL CAPS in the script
-        emphasized = {w.strip(".,!?:\"'").upper() for w in seg.split() if w.strip(".,!?:\"'").isupper() and len(w.strip(".,!?:\"'")) > 1}
-        words = []
-        if response.alignment:
-            chars      = response.alignment.characters
-            starts     = response.alignment.character_start_times_seconds
-            ends       = response.alignment.character_end_times_seconds
-            cur_word   = ""
-            word_start = 0.0
-            for ch, s, e in zip(chars, starts, ends):
-                if ch == " " or ch == "\n":
-                    if cur_word.strip():
-                        clean = cur_word.strip().strip(".,!?:\"'")
-                        words.append({
-                            "word":         cur_word.strip(),
-                            "start":        word_start,
-                            "end":          e,
-                            "emphasized":   clean.upper() in emphasized,
-                        })
-                    cur_word = ""
-                else:
-                    if not cur_word:
-                        word_start = s
-                    cur_word += ch
-            if cur_word.strip():
-                clean = cur_word.strip().strip(".,!?:\"'")
-                words.append({
-                    "word":       cur_word.strip(),
-                    "start":      word_start,
-                    "end":        ends[-1],
-                    "emphasized": clean.upper() in emphasized,
-                })
-
         dur = mp3_duration(path)
         costs["elevenlabs"]["chars"] += len(seg)
         costs["elevenlabs"]["usd"]   += (len(seg) / 1000) * 0.30
-        results.append({"path": path, "duration": dur, "words": words})
-        print(f"      Segment {i+1}: {dur:.1f}s ({len(words)} words)")
+        results.append({"path": path, "duration": dur})
+        print(f"      Segment {i+1}: {dur:.1f}s")
 
     return results
 
@@ -616,15 +594,13 @@ def build_timeline(card_urls: list, audio_info: list,
     voice_clips = []
     cursor      = 0.0
 
-    caption_clips = []
     card_iter = iter(card_urls)
 
     for i, info in enumerate(audio_info):
         dur   = info["duration"]
         trans = TRANSITIONS[i] if i < len(TRANSITIONS) else {"in": "fade", "out": "fade"}
 
-        if i == 0 and not info.get("is_outro"):
-            # Only show the question card — no cards for answers
+        if not info.get("is_outro"):
             card_url = next(card_iter)
             image_clips.append({
                 "asset":      {"type": "image", "src": card_url},
@@ -633,47 +609,6 @@ def build_timeline(card_urls: list, audio_info: list,
                 "fit":        "crop",
                 "transition": trans,
             })
-
-        # Word-by-word captions — show for all segments except outro
-        if not info.get("is_outro") and info.get("words"):
-            # During question card (i==0): sit below the card
-            # During answers (i>0): center of screen
-            y_pos = 0.38 if i == 0 else 0.05
-
-            for w in info["words"]:
-                if w.get("emphasized"):
-                    color = "#FF0000"  # red — pops hardest
-                    size  = "92px"
-                else:
-                    color = "#FFFFFF"  # white
-                    size  = "80px"
-
-                # Solid black outline via 8-direction text-shadow (works everywhere)
-                outline = (
-                    "3px 3px 0 #000, -3px 3px 0 #000, 3px -3px 0 #000, -3px -3px 0 #000,"
-                    "4px 0 0 #000, -4px 0 0 #000, 0 4px 0 #000, 0 -4px 0 #000"
-                )
-
-                caption_clips.append({
-                    "asset": {
-                        "type":   "html",
-                        "html":   f"<p>{w['word'].upper()}</p>",
-                        "css":    (
-                            f"p {{ font-family: Arial Black, Arial, sans-serif;"
-                            f" font-size: {size}; font-weight: 900;"
-                            f" color: {color};"
-                            f" text-shadow: {outline};"
-                            f" margin: 0; padding: 0 12px;"
-                            f" text-align: center; }}"
-                        ),
-                        "width":  900,
-                        "height": 180,
-                    },
-                    "start":    round(cursor + w["start"], 3),
-                    "length":   round(max(w["end"] - w["start"], 0.05), 3),
-                    "position": "center",
-                    "offset":   {"x": 0, "y": y_pos},
-                })
 
         voice_clips.append({
             "asset":  {"type": "audio", "src": info["url"], "volume": 1.0},
@@ -714,7 +649,6 @@ def build_timeline(card_urls: list, audio_info: list,
         t += info["duration"]
 
     tracks = [
-        {"clips": caption_clips},
         {"clips": image_clips},
         {"clips": [bg_clip]},
         {"clips": voice_clips},
@@ -848,11 +782,18 @@ def make_reddit_video(topic: str) -> str:
     print(f"      Search:  {search}")
     print(f"      Caption: {caption}")
 
-    print("\n[2/7] Rendering question card...")
-    # Only render the question card — answers shown via captions over background
-    question_card = render_post_card(post, pkg["subreddit"])
-    card_paths    = [save_card_png(question_card, 0)]
-    print(f"      Question card done.")
+    all_segs = [
+        {"type": "post",    "data": post},
+        *[{"type": "comment", "data": c} for c in comments]
+    ]
+
+    print("\n[2/7] Rendering Reddit cards...")
+    card_paths = []
+    for i, s in enumerate(all_segs):
+        card = render_post_card(s["data"], pkg["subreddit"]) \
+               if s["type"] == "post" else render_comment_card(s["data"])
+        card_paths.append(save_card_png(card, i))
+        print(f"      Card {i+1}/{len(all_segs)} done.")
 
     MIN_DURATION = 62  # TikTok Creativity Program requires 60s+ to monetise
 
