@@ -473,6 +473,39 @@ def save_card_png(card: Image.Image, index: int) -> str:
     return out
 
 
+def render_outro_card() -> Image.Image:
+    """Clean follow card shown during the outro — no Reddit card, just a simple CTA."""
+    W, H   = 900, 220
+    card   = Image.new("RGBA", (W, H), (39, 39, 41, 240))
+    draw   = ImageDraw.Draw(card)
+
+    try:
+        font_big  = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf", 38)
+        font_small = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf", 26)
+    except Exception:
+        font_big  = ImageFont.load_default()
+        font_small = font_big
+
+    # Orange accent line at top
+    draw.rectangle([(0, 0), (W, 5)], fill=(255, 69, 0, 255))
+
+    # Main text
+    main_text = "Follow for a new video every day 🔔"
+    sub_text  = "New Reddit question drops daily"
+
+    # Center main text
+    bbox = draw.textbbox((0, 0), main_text, font=font_big)
+    tw = bbox[2] - bbox[0]
+    draw.text(((W - tw) // 2, 65), main_text, font=font_big, fill=(215, 218, 220, 255))
+
+    # Center sub text
+    bbox2 = draw.textbbox((0, 0), sub_text, font=font_small)
+    tw2 = bbox2[2] - bbox2[0]
+    draw.text(((W - tw2) // 2, 130), sub_text, font=font_small, fill=(129, 131, 132, 255))
+
+    return card
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # STEP 4 — ElevenLabs: per-segment MP3 with reactive voice settings
 # ══════════════════════════════════════════════════════════════════════════════
@@ -748,7 +781,7 @@ def make_reddit_video(topic: str) -> str:
     # TikTok's Creativity Program (pays out on videos over 60 seconds only).
     if total_dur < MIN_DURATION:
         gap       = MIN_DURATION - total_dur
-        outro_txt = "Follow for more unhinged Reddit stories every day."
+        outro_txt = "Follow for a new video every day."
         print(f"      ⚠️  {total_dur:.1f}s is under {MIN_DURATION}s — adding {gap:.1f}s outro to qualify for monetisation...")
         client    = ElevenLabs(api_key=ELEVENLABS_KEY)
         audio_gen = client.text_to_speech.convert(
@@ -766,7 +799,11 @@ def make_reddit_video(topic: str) -> str:
         costs["elevenlabs"]["chars"] += len(outro_txt)
         costs["elevenlabs"]["usd"]   += (len(outro_txt) / 1000) * 0.30
         audio_info.append({"path": outro_path, "duration": outro_dur, "is_outro": True})
-        card_paths.append(card_paths[-1])   # repeat last card during outro
+        # Render a dedicated follow card instead of repeating the last answer
+        outro_card     = render_outro_card()
+        outro_card_idx = len(card_paths)
+        outro_card_path = save_card_png(outro_card, outro_card_idx)
+        card_paths.append(outro_card_path)
         total_dur = sum(a["duration"] for a in audio_info)
         print(f"      ✅ New total: {total_dur:.1f}s")
 
