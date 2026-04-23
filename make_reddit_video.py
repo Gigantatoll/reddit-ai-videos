@@ -171,9 +171,14 @@ NO over-the-top reactions. Just reads it, pauses, maybe ONE short dry comment pe
 Segment 0 (hook): One sentence. Punchy. Makes it sound unmissable.
   e.g. "Someone asked Reddit: [question]. The answers are actually sending me."
 
-Segments 1-5 (one per comment): Read the comment cleanly. Short natural pause. Then optionally ONE dry 4-6 word reaction that's specific to that comment — not generic.
-  GOOD reactions: "...the music thing. Genius. Evil genius." / "...I'm 5'2. That's the whole joke." / "...still flinches at 28. Incredible."
-  NO reactions needed if the comment is funny enough on its own — silence is fine.
+Segments 1-5 (one per comment): Read the comment cleanly. Short natural pause. Then optionally ONE dry 4-6 word reaction.
+
+CRITICAL — ALL CAPS RULE: In EVERY segment, put 1-3 words in ALL CAPS. These are the most shocking or funny words — they flash red on screen for emphasis.
+  WRONG: "She told her kids the ice cream truck plays music when it's out of ice cream."
+  RIGHT: "She told her kids the ice cream truck plays music when it's SOLD OUT. ...Her kids are TWENTY now. They just found out."
+  WRONG: "I haven't read a book report since 2016."
+  RIGHT: "I haven't read a single book report since 2016. I just SKIM the first line... since 2016."
+Every segment MUST have at least one ALL CAPS word. No exceptions.
 
 Each segment MAX 25 words total. Use "..." for pauses.
 
@@ -629,17 +634,26 @@ def build_timeline(card_urls: list, audio_info: list,
                 "transition": trans,
             })
 
-        # Word-by-word captions — skip during question card (i==0), not during outro
-        if i > 0 and not info.get("is_outro") and info.get("words"):
+        # Word-by-word captions — show for all segments except outro
+        if not info.get("is_outro") and info.get("words"):
+            # During question card (i==0): sit below the card
+            # During answers (i>0): center of screen
+            y_pos = 0.38 if i == 0 else 0.05
+
             for w in info["words"]:
                 if w.get("emphasized"):
-                    color  = "#FF0000"   # red for key words — pops hardest
-                    size   = "90px"
-                    stroke = "6px"
+                    color = "#FF0000"  # red — pops hardest
+                    size  = "92px"
                 else:
-                    color  = "#FFFFFF"   # clean white for normal words
-                    size   = "78px"
-                    stroke = "5px"
+                    color = "#FFFFFF"  # white
+                    size  = "80px"
+
+                # Solid black outline via 8-direction text-shadow (works everywhere)
+                outline = (
+                    "3px 3px 0 #000, -3px 3px 0 #000, 3px -3px 0 #000, -3px -3px 0 #000,"
+                    "4px 0 0 #000, -4px 0 0 #000, 0 4px 0 #000, 0 -4px 0 #000"
+                )
+
                 caption_clips.append({
                     "asset": {
                         "type":   "html",
@@ -648,8 +662,7 @@ def build_timeline(card_urls: list, audio_info: list,
                             f"p {{ font-family: Arial Black, Arial, sans-serif;"
                             f" font-size: {size}; font-weight: 900;"
                             f" color: {color};"
-                            f" -webkit-text-stroke: {stroke} #000000;"
-                            f" text-shadow: 3px 3px 6px rgba(0,0,0,0.9);"
+                            f" text-shadow: {outline};"
                             f" margin: 0; padding: 0 12px;"
                             f" text-align: center; }}"
                         ),
@@ -659,7 +672,7 @@ def build_timeline(card_urls: list, audio_info: list,
                     "start":    round(cursor + w["start"], 3),
                     "length":   round(max(w["end"] - w["start"], 0.05), 3),
                     "position": "center",
-                    "offset":   {"x": 0, "y": 0.35},   # lower third, away from question card
+                    "offset":   {"x": 0, "y": y_pos},
                 })
 
         voice_clips.append({
