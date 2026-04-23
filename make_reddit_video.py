@@ -518,27 +518,48 @@ def generate_voice_segments(segments: list) -> list:
     results = []
 
     for i, seg in enumerate(segments):
-        audio_gen = client.text_to_speech.convert(
+        response = client.text_to_speech.convert_with_timestamps(
             voice_id=ELEVENLABS_VOICE_ID,
             text=seg,
-            model_id="eleven_multilingual_v2",  # higher quality than turbo
+            model_id="eleven_multilingual_v2",
             voice_settings={
-                "stability":         0.45,   # consistent but not robotic
+                "stability":         0.45,
                 "similarity_boost":  0.80,
-                "style":             0.55,   # natural, not over-dramatic
+                "style":             0.55,
                 "use_speaker_boost": True,
             }
         )
-        audio_bytes = b"".join(audio_gen)
+        import base64
+        audio_bytes = base64.b64decode(response.audio_base64)
         path = str(TEMP_DIR / f"voice_{i}.mp3")
         with open(path, "wb") as f:
             f.write(audio_bytes)
 
+        # Extract word-level timestamps
+        words = []
+        if response.alignment:
+            chars      = response.alignment.characters
+            starts     = response.alignment.character_start_times_seconds
+            ends       = response.alignment.character_end_times_seconds
+            cur_word   = ""
+            word_start = 0.0
+            for ch, s, e in zip(chars, starts, ends):
+                if ch == " " or ch == "\n":
+                    if cur_word.strip():
+                        words.append({"word": cur_word.strip(), "start": word_start, "end": e})
+                    cur_word = ""
+                else:
+                    if not cur_word:
+                        word_start = s
+                    cur_word += ch
+            if cur_word.strip():
+                words.append({"word": cur_word.strip(), "start": word_start, "end": ends[-1]})
+
         dur = mp3_duration(path)
         costs["elevenlabs"]["chars"] += len(seg)
         costs["elevenlabs"]["usd"]   += (len(seg) / 1000) * 0.30
-        results.append({"path": path, "duration": dur})
-        print(f"      Segment {i+1}: {dur:.1f}s")
+        results.append({"path": path, "duration": dur, "words": words})
+        print(f"      Segment {i+1}: {dur:.1f}s ({len(words)} words)")
 
     return results
 
@@ -577,12 +598,15 @@ def build_timeline(card_urls: list, audio_info: list,
     voice_clips = []
     cursor      = 0.0
 
+    caption_clips = []
     card_iter = iter(card_urls)
+
     for i, info in enumerate(audio_info):
         dur   = info["duration"]
         trans = TRANSITIONS[i] if i < len(TRANSITIONS) else {"in": "fade", "out": "fade"}
 
-        if not info.get("is_outro"):
+        if i == 0 and not info.get("is_outro"):
+            # Only show the question card — no cards for answers
             card_url = next(card_iter)
             image_clips.append({
                 "asset":      {"type": "image", "src": card_url},
@@ -591,7 +615,31 @@ def build_timeline(card_urls: list, audio_info: list,
                 "fit":        "crop",
                 "transition": trans,
             })
-        # Outro: no image clip — background video shows through cleanly
+
+        # Word-by-word captions for all segments (not outro)
+        if not info.get("is_outro") and info.get("words"):
+            for w in info["words"]:
+                caption_clips.append({
+                    "asset": {
+                        "type":     "html",
+                        "html":     f"<p>{w['word']}</p>",
+                        "css":      (
+                            "p { font-family: Arial Black, Arial, sans-serif;"
+                            " font-size: 72px; font-weight: 900;"
+                            " color: #FFE600;"
+                            " -webkit-text-stroke: 4px #000000;"
+                            " text-transform: uppercase;"
+                            " margin: 0; padding: 0 10px;"
+                            " text-align: center; }"
+                        ),
+                        "width":    800,
+                        "height":   160,
+                    },
+                    "start":    round(cursor + w["start"], 3),
+                    "length":   round(max(w["end"] - w["start"], 0.05), 3),
+                    "position": "center",
+                    "offset":   {"x": 0, "y": 0.1},
+                })
 
         voice_clips.append({
             "asset":  {"type": "audio", "src": info["url"], "volume": 1.0},
@@ -631,16 +679,21 @@ def build_timeline(card_urls: list, audio_info: list,
             })
         t += info["duration"]
 
+    tracks = [
+        {"clips": caption_clips},
+        {"clips": image_clips},
+        {"clips": [bg_clip]},
+        {"clips": voice_clips},
+        {"clips": music_clips},
+        {"clips": ding_clips},
+    ]
+    # Remove empty tracks
+    tracks = [t for t in tracks if t["clips"]]
+
     return {
         "timeline": {
             "background": "#000000",
-            "tracks": [
-                {"clips": image_clips},
-                {"clips": [bg_clip]},
-                {"clips": voice_clips},
-                {"clips": music_clips},
-                {"clips": ding_clips},
-            ]
+            "tracks": tracks,
         },
         "output": {
             "format": "mp4", "resolution": "hd",
@@ -761,18 +814,11 @@ def make_reddit_video(topic: str) -> str:
     print(f"      Search:  {search}")
     print(f"      Caption: {caption}")
 
-    all_segs = [
-        {"type": "post",    "data": post},
-        *[{"type": "comment", "data": c} for c in comments]
-    ]
-
-    print("\n[2/7] Rendering Reddit cards...")
-    card_paths = []
-    for i, s in enumerate(all_segs):
-        card = render_post_card(s["data"], pkg["subreddit"]) \
-               if s["type"] == "post" else render_comment_card(s["data"])
-        card_paths.append(save_card_png(card, i))
-        print(f"      Card {i+1}/{len(all_segs)} done.")
+    print("\n[2/7] Rendering question card...")
+    # Only render the question card — answers shown via captions over background
+    question_card = render_post_card(post, pkg["subreddit"])
+    card_paths    = [save_card_png(question_card, 0)]
+    print(f"      Question card done.")
 
     MIN_DURATION = 62  # TikTok Creativity Program requires 60s+ to monetise
 
