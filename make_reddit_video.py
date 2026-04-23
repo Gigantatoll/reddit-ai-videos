@@ -577,17 +577,22 @@ def build_timeline(card_urls: list, audio_info: list,
     voice_clips = []
     cursor      = 0.0
 
-    for i, (card_url, info) in enumerate(zip(card_urls, audio_info)):
+    card_iter = iter(card_urls)
+    for i, info in enumerate(audio_info):
         dur   = info["duration"]
         trans = TRANSITIONS[i] if i < len(TRANSITIONS) else {"in": "fade", "out": "fade"}
 
-        image_clips.append({
-            "asset":      {"type": "image", "src": card_url},
-            "start":      round(cursor, 3),
-            "length":     round(dur, 3),
-            "fit":        "crop",
-            "transition": trans,
-        })
+        if not info.get("is_outro"):
+            card_url = next(card_iter)
+            image_clips.append({
+                "asset":      {"type": "image", "src": card_url},
+                "start":      round(cursor, 3),
+                "length":     round(dur, 3),
+                "fit":        "crop",
+                "transition": trans,
+            })
+        # Outro: no image clip — background video shows through cleanly
+
         voice_clips.append({
             "asset":  {"type": "audio", "src": info["url"], "volume": 1.0},
             "start":  round(cursor, 3),
@@ -799,11 +804,7 @@ def make_reddit_video(topic: str) -> str:
         costs["elevenlabs"]["chars"] += len(outro_txt)
         costs["elevenlabs"]["usd"]   += (len(outro_txt) / 1000) * 0.30
         audio_info.append({"path": outro_path, "duration": outro_dur, "is_outro": True})
-        # Render a dedicated follow card instead of repeating the last answer
-        outro_card     = render_outro_card()
-        outro_card_idx = len(card_paths)
-        outro_card_path = save_card_png(outro_card, outro_card_idx)
-        card_paths.append(outro_card_path)
+        # No card added — outro shows only the background video + voice
         total_dur = sum(a["duration"] for a in audio_info)
         print(f"      ✅ New total: {total_dur:.1f}s")
 
