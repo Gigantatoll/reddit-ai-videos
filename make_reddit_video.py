@@ -535,7 +535,8 @@ def generate_voice_segments(segments: list) -> list:
         with open(path, "wb") as f:
             f.write(audio_bytes)
 
-        # Extract word-level timestamps
+        # Extract word-level timestamps + mark which words were ALL CAPS in the script
+        emphasized = {w.strip(".,!?:\"'").upper() for w in seg.split() if w.strip(".,!?:\"'").isupper() and len(w.strip(".,!?:\"'")) > 1}
         words = []
         if response.alignment:
             chars      = response.alignment.characters
@@ -546,14 +547,26 @@ def generate_voice_segments(segments: list) -> list:
             for ch, s, e in zip(chars, starts, ends):
                 if ch == " " or ch == "\n":
                     if cur_word.strip():
-                        words.append({"word": cur_word.strip(), "start": word_start, "end": e})
+                        clean = cur_word.strip().strip(".,!?:\"'")
+                        words.append({
+                            "word":         cur_word.strip(),
+                            "start":        word_start,
+                            "end":          e,
+                            "emphasized":   clean.upper() in emphasized,
+                        })
                     cur_word = ""
                 else:
                     if not cur_word:
                         word_start = s
                     cur_word += ch
             if cur_word.strip():
-                words.append({"word": cur_word.strip(), "start": word_start, "end": ends[-1]})
+                clean = cur_word.strip().strip(".,!?:\"'")
+                words.append({
+                    "word":       cur_word.strip(),
+                    "start":      word_start,
+                    "end":        ends[-1],
+                    "emphasized": clean.upper() in emphasized,
+                })
 
         dur = mp3_duration(path)
         costs["elevenlabs"]["chars"] += len(seg)
@@ -619,21 +632,22 @@ def build_timeline(card_urls: list, audio_info: list,
         # Word-by-word captions for all segments (not outro)
         if not info.get("is_outro") and info.get("words"):
             for w in info["words"]:
+                color = "#FFE600" if w.get("emphasized") else "#FFFFFF"
+                size  = "82px"    if w.get("emphasized") else "72px"
                 caption_clips.append({
                     "asset": {
-                        "type":     "html",
-                        "html":     f"<p>{w['word']}</p>",
-                        "css":      (
-                            "p { font-family: Arial Black, Arial, sans-serif;"
-                            " font-size: 72px; font-weight: 900;"
-                            " color: #FFE600;"
-                            " -webkit-text-stroke: 4px #000000;"
-                            " text-transform: uppercase;"
-                            " margin: 0; padding: 0 10px;"
-                            " text-align: center; }"
+                        "type":   "html",
+                        "html":   f"<p>{w['word'].upper()}</p>",
+                        "css":    (
+                            f"p {{ font-family: Arial Black, Arial, sans-serif;"
+                            f" font-size: {size}; font-weight: 900;"
+                            f" color: {color};"
+                            f" -webkit-text-stroke: 4px #000000;"
+                            f" margin: 0; padding: 0 10px;"
+                            f" text-align: center; }}"
                         ),
-                        "width":    800,
-                        "height":   160,
+                        "width":  800,
+                        "height": 160,
                     },
                     "start":    round(cursor + w["start"], 3),
                     "length":   round(max(w["end"] - w["start"], 0.05), 3),
