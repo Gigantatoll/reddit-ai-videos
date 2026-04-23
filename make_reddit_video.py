@@ -108,75 +108,77 @@ def ensure_sounds() -> tuple:
 def generate_reddit_package(topic: str) -> dict:
     client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
 
-    prompt = f"""You are generating a viral TikTok Reddit reading video targeting Gen Z (16-24).
-
-FORMAT: r/AskReddit question → 3 people answer with increasingly unhinged personal stories.
+    prompt = f"""You are generating a viral TikTok Reddit reading video.
 
 Topic hint: "{topic}"
 
-━━ QUESTION ━━
-- Max 10 words. Short, open-ended, impossible NOT to answer.
-- Must make the viewer immediately think of their own answer — that's what drives TikTok comments.
-- Best formats: "What's the [superlative] thing you've ever [done/seen/heard]?" or "People who [specific group], what happened?" or a completely out-of-pocket hypothetical.
+━━ THE QUESTION — this is the most important part ━━
+Study this example of a question that got millions of views:
+  "What's the most unethical parenting hack you know?"
+
+Why it works:
+- "Unethical" signals the answers will be funny and slightly wrong
+- Everyone either IS a parent or HAS parents — 100% universal
+- "Hack" means real practical things people actually do
+- It makes EVERYONE think of their own answer immediately → floods TikTok comments
+
+Your question must follow this exact energy:
+- Slightly taboo or edgy, but not offensive
+- 100% universally relatable — every single person watching has experienced this
+- Implies the answers will be surprising, funny, or slightly wrong
+- Max 12 words. Short, punchy, impossible to scroll past.
+
+GREAT question formats:
+  "What's the most unethical [X] hack you know?"
+  "What did your [parents/boss/school] do that was lowkey genius but wrong?"
+  "What's the thing everyone does but nobody admits out loud?"
+  "What rule exists that makes zero sense but everyone follows anyway?"
+  "What's the most [taboo adjective] thing you've done that actually worked?"
+
 - Body: empty string.
 - Upvotes + fake timestamp (e.g. "38.4k", "6h")
 
-━━ COMMENTS — the headbutt formula ━━
-Every comment must follow this exact structure:
-  1. Normal social situation everyone has been in
-  2. Two people do two different things at the same time
-  3. Last 3 words = the punchline. Unexpected. Specific. Slightly physical or absurd.
+━━ COMMENTS — 5 answers, real and blunt ━━
+Generate FIVE comments. Each one is a real thing a real person did or knows.
+NO fictional scenarios. NO abstract jokes. Just the thing, stated deadpan.
 
-The gold standard for this format — study these exactly:
-  "Went for a handshake. She went for a hug. I HEADBUTTED her."
-  "Said goodbye to someone. Started walking the same direction. Did it for four minutes."
-  "Waved back at someone who wasn't waving at me. The person they were waving at saw everything."
-  "Said 'you too' when the waiter said enjoy your meal. He said 'I don't work here.'"
-  "Went to hold the door open. The person was too far. We both committed. It took 40 seconds."
-  "Called my teacher mum. She said 'aww'. I quit school the next day."
-  "Said 'love you' when hanging up on my dentist. He said 'love you too'. We never spoke of it."
-  "Tried to look cool tripping on nothing. Fell into a stranger. He caught me. We made eye contact."
+The humor comes from RECOGNITION — people laugh because it's true, not because it's clever.
+Think: "oh my god my parents did this exact thing" or "I have literally done this."
 
-WHY THESE WORK — understand this before writing:
-- The situation is universal. Everyone has done it or watched it happen.
-- The embarrassment is physical or verbal — it actually happened, it can't be taken back.
-- The punchline is the logical worst-case outcome of that situation, stated deadpan.
-- It's SHORT. 10-15 words. The joke lands before you finish reading.
-- It makes you immediately think of YOUR own version — that's what fills TikTok comments.
+RULES:
+- MAX 20 words per comment. Under 15 is better.
+- State the thing bluntly. No setup. No explanation. The content IS the joke.
+- Must be specific. "Tell kids the ice cream truck plays music when it's out of ice cream" > "lie to your kids."
+- Real > absurd. Grounded > random. Specific > vague.
+- Each comment slightly more unhinged than the last.
 
-STRICT RULES:
-- MAX 15 words. Under 12 is better.
-- No niche references. No made-up scenarios. No abstract humour.
-- The funniest word goes in ALL CAPS. Just one.
-- Must pass the "my mum and a 14-year-old both laugh" test. If either wouldn't get it — rewrite.
+PERFECT examples for "unethical parenting hack" topic:
+  "Tell your kids the ice cream truck only plays music when it's sold out."
+  "If they won't sleep, tell them their eyes will fall out if they stay awake too long."
+  "My dad told me coffee stunts your growth. I'm 5'2 and he drank four cups a day."
+  "Tell them the toy in the store is broken and the one at home works fine."
+  "My parents said swearing causes cancer. I'm 28 and still flinch."
 
-Comment 1 (~29k): The most relatable one. Mild awkward social fail. Everyone nods immediately.
-Comment 2 (~11k): More escalated. The situation got worse because of what the person did next.
-Comment 3 (~2.8k): The best one. Most unexpected outcome. Should make someone spit out their drink. End with one deadpan word that reframes everything.
+For YOUR topic, same energy — real, specific, slightly wrong, instantly recognisable.
 
-━━ VOICE SCRIPT ━━
-British male. Dry, warm, like a mate reading these aloud at the pub.
-He lets the joke land before reacting. Doesn't oversell it.
+Comment upvotes (use these): 34.2k / 18.7k / 9.1k / 4.3k / 1.8k
+Timestamps: 5h / 4h / 3h / 2h / 1h
 
-MUST say upvote count out loud:
-  - "Top comment — twenty-nine THOUSAND upvotes:"
-  - "Eleven thousand upvotes:"
-  - "Two thousand eight hundred upvotes:"
+━━ VOICE SCRIPT — 6 segments total ━━
+British male. Clean, dry, warm. Reads each answer like he's genuinely enjoying it.
+NO over-the-top reactions. Just reads it, pauses, maybe ONE short dry comment per answer.
 
-Segment 0: One punchy hook sentence. Make it sound unmissable.
-  e.g. "AskReddit asked [question]. I was not prepared for these answers."
+Segment 0 (hook): One sentence. Punchy. Makes it sound unmissable.
+  e.g. "Someone asked Reddit: [question]. The answers are actually sending me."
 
-Segments 1-3: Read the comment word for word. Pause. Then ONE dry reaction — 5 to 8 words. Point at the specific funniest detail.
-  GOOD: "...I HEADBUTTED her. He led with his HEAD."
-  GOOD: "...forty seconds. Neither of them left. Neither of them spoke."
-  GOOD: "...love you too. The dentist said LOVE YOU TOO."
-  NEVER: "That's hilarious!" / "Oh wow!" / "I can't!" — banned, too generic.
+Segments 1-5 (one per comment): Read the comment cleanly. Short natural pause. Then optionally ONE dry 4-6 word reaction that's specific to that comment — not generic.
+  GOOD reactions: "...the music thing. Genius. Evil genius." / "...I'm 5'2. That's the whole joke." / "...still flinches at 28. Incredible."
+  NO reactions needed if the comment is funny enough on its own — silence is fine.
 
-Total per segment (comment + reaction): MAX 30 words.
-Use "..." for pauses. ALL CAPS on the single most painful word.
+Each segment MAX 25 words total. Use "..." for pauses.
 
 ━━ PEXELS SEARCH ━━
-Pick the background that best matches the video's energy. Vary it — don't always pick the same one.
+Pick the background that best matches the video's energy. Vary it.
 Options: "parkour free running", "skateboard tricks", "basketball freestyle",
 "bmx tricks extreme", "martial arts training", "cooking fast satisfying",
 "satisfying food compilation", "city street walking", "gym workout motivation"
@@ -192,18 +194,22 @@ Return ONLY valid JSON:
     "body": ""
   }},
   "comments": [
-    {{ "author": "u/...", "upvotes": "29.1k", "timestamp": "5h", "text": "..." }},
-    {{ "author": "u/...", "upvotes": "11.3k", "timestamp": "4h", "text": "..." }},
-    {{ "author": "u/...", "upvotes": "2.8k",  "timestamp": "3h", "text": "..." }}
+    {{ "author": "u/...", "upvotes": "34.2k", "timestamp": "5h", "text": "..." }},
+    {{ "author": "u/...", "upvotes": "18.7k", "timestamp": "4h", "text": "..." }},
+    {{ "author": "u/...", "upvotes": "9.1k",  "timestamp": "3h", "text": "..." }},
+    {{ "author": "u/...", "upvotes": "4.3k",  "timestamp": "2h", "text": "..." }},
+    {{ "author": "u/...", "upvotes": "1.8k",  "timestamp": "1h", "text": "..." }}
   ],
   "voice_segments": [
-    "Right, r-slash AskReddit. [question hook]. Brace yourself.",
-    "Top comment — twenty-nine THOUSAND upvotes: [read comment]. ...[outrageous host reaction sentence].",
-    "Eleven thousand upvotes on this one: [read comment]. ...[outrageous host reaction sentence].",
-    "Two thousand eight hundred upvotes: [read comment]. ...[outrageous host reaction sentence]."
+    "[hook sentence about the question]",
+    "[read comment 1]...[optional short dry reaction]",
+    "[read comment 2]...[optional short dry reaction]",
+    "[read comment 3]...[optional short dry reaction]",
+    "[read comment 4]...[optional short dry reaction]",
+    "[read comment 5]...[optional short dry reaction]"
   ],
   "pexels_search": "parkour free running",
-  "caption": "Viral TikTok caption. Format: [punchy hook] [emoji] [hashtags]. Rules: hook must make someone stop scrolling — specific, funny or shocking (not generic). Always include #reddit + #askreddit. Add 2-3 topic-specific hashtags (e.g. #pettyrevenge #worktok #storytime #neighbour). Mix 1 big hashtag + niche ones. Under 150 chars total."
+  "caption": "Viral TikTok caption. Hook must be ONE specific funny/shocking detail from the answers (not generic). Always include #reddit #askreddit. Add 2-3 relevant hashtags. Under 130 chars."
 }}"""
 
     msg = client.messages.create(
