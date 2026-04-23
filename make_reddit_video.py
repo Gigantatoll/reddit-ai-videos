@@ -51,19 +51,19 @@ ASSETS_DIR          = Path(os.getenv("ASSETS_DIR", "/Users/vincent/Desktop/Reddi
 TEMP_DIR            = Path("/tmp/reddit_video")
 VIDEO_W, VIDEO_H    = 1080, 1920
 
-# Active backgrounds that actually keep people watching
+# Active backgrounds that keep people watching — darker/high-contrast so text is readable
 FALLBACK_SEARCHES = [
-    "parkour free running",
-    "skateboard tricks",
-    "basketball freestyle",
+    "parkour night city",
+    "skateboard tricks night",
+    "basketball court night",
     "bmx tricks extreme",
-    "martial arts training",
-    "cooking fast satisfying",
-    "subway surfers gameplay",
+    "martial arts training dark",
+    "subway train tunnel",
     "minecraft parkour",
-    "satisfying food compilation",
-    "city street walking",
-    "gym workout motivation",
+    "night city driving",
+    "gym workout dark",
+    "street basketball night",
+    "urban parkour rooftop",
 ]
 
 ASSETS_DIR.mkdir(parents=True, exist_ok=True)
@@ -183,10 +183,10 @@ Every segment MUST have at least one ALL CAPS word. No exceptions.
 Each segment MAX 25 words total. Use "..." for pauses.
 
 ━━ PEXELS SEARCH ━━
-Pick the background that best matches the video's energy. Vary it.
-Options: "parkour free running", "skateboard tricks", "basketball freestyle",
-"bmx tricks extreme", "martial arts training", "cooking fast satisfying",
-"satisfying food compilation", "city street walking", "gym workout motivation"
+Pick a DARK background — text captions must be readable. Vary it.
+Options: "parkour night city", "skateboard tricks night", "basketball court night",
+"bmx tricks extreme", "martial arts training dark", "subway train tunnel",
+"minecraft parkour", "night city driving", "gym workout dark", "urban parkour rooftop"
 
 Return ONLY valid JSON:
 {{
@@ -305,17 +305,62 @@ def _profile_color(username: str) -> tuple:
     return PROFILE_COLORS[h % len(PROFILE_COLORS)]
 
 
-def _font(size: int) -> ImageFont.FreeTypeFont:
-    for path in [
+def _font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
+    candidates = [
         "/System/Library/Fonts/Helvetica.ttc",
         "/System/Library/Fonts/Arial.ttf",
-        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
-    ]:
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf" if bold
+            else "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+    ]
+    for path in candidates:
         try:
             return ImageFont.truetype(path, size)
         except Exception:
             continue
     return ImageFont.load_default()
+
+
+def render_caption_image(text: str, emphasized_words: set, index: int) -> str:
+    """
+    Render a caption line as a transparent PNG with white text + thick black stroke.
+    Uses PIL stroke_width — guaranteed to work, same as Reddit cards.
+    """
+    W          = 1080   # full video width
+    font_size  = 58
+    stroke_w   = 8
+    line_gap   = 14
+
+    font       = _font(font_size, bold=True)
+    lines      = textwrap.wrap(text.upper(), width=17)  # ~17 chars fits safely at 58px
+
+    dummy      = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+    line_h     = dummy.textbbox((0, 0), "Ag", font=font, stroke_width=stroke_w)[3] + line_gap
+    H          = line_h * len(lines) + 30
+
+    img  = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+
+    y = 15
+    for line in lines:
+        words_in_line = line.split()
+        # Center the line; clamp so it never starts outside the canvas
+        full_bbox = draw.textbbox((0, 0), line, font=font, stroke_width=stroke_w)
+        line_w    = full_bbox[2] - full_bbox[0]
+        x         = max(stroke_w, (W - line_w) // 2)
+
+        for word in words_in_line:
+            clean = word.strip(".,!?:\"'")
+            color = (255, 0, 0, 255) if clean in emphasized_words else (255, 255, 255, 255)
+            draw.text((x, y), word, font=font, fill=color,
+                      stroke_width=stroke_w, stroke_fill=(0, 0, 0, 255))
+            wb = draw.textbbox((0, 0), word + " ", font=font, stroke_width=stroke_w)
+            x += wb[2] - wb[0]
+
+        y += line_h
+
+    path = str(TEMP_DIR / f"caption_{index}.png")
+    img.save(path, "PNG")
+    return path
 
 
 def _rounded_rect(draw: ImageDraw.Draw, xy, radius: int, fill: tuple):
@@ -531,11 +576,12 @@ def mp3_duration(path: str) -> float:
 
 
 def generate_voice_segments(segments: list) -> list:
+    import base64
     client  = ElevenLabs(api_key=ELEVENLABS_KEY)
     results = []
 
     for i, seg in enumerate(segments):
-        audio_gen = client.text_to_speech.convert(
+        response = client.text_to_speech.convert_with_timestamps(
             voice_id=ELEVENLABS_VOICE_ID,
             text=seg,
             model_id="eleven_multilingual_v2",
@@ -546,16 +592,50 @@ def generate_voice_segments(segments: list) -> list:
                 "use_speaker_boost": True,
             }
         )
-        audio_bytes = b"".join(audio_gen)
+        audio_bytes = base64.b64decode(response.audio_base_64)
         path = str(TEMP_DIR / f"voice_{i}.mp3")
         with open(path, "wb") as f:
             f.write(audio_bytes)
 
+        # Extract word-level timestamps + mark ALL CAPS words as emphasized
+        emphasized = {w.strip(".,!?:\"'").upper() for w in seg.split()
+                      if w.strip(".,!?:\"'").isupper() and len(w.strip(".,!?:\"'")) > 1}
+        words = []
+        if response.alignment:
+            chars      = response.alignment.characters
+            starts     = response.alignment.character_start_times_seconds
+            ends       = response.alignment.character_end_times_seconds
+            cur_word   = ""
+            word_start = 0.0
+            for ch, s, e in zip(chars, starts, ends):
+                if ch in (" ", "\n"):
+                    if cur_word.strip():
+                        clean = cur_word.strip().strip(".,!?:\"'")
+                        words.append({
+                            "word":       cur_word.strip(),
+                            "start":      word_start,
+                            "end":        e,
+                            "emphasized": clean.upper() in emphasized,
+                        })
+                    cur_word = ""
+                else:
+                    if not cur_word:
+                        word_start = s
+                    cur_word += ch
+            if cur_word.strip():
+                clean = cur_word.strip().strip(".,!?:\"'")
+                words.append({
+                    "word":       cur_word.strip(),
+                    "start":      word_start,
+                    "end":        ends[-1],
+                    "emphasized": clean.upper() in emphasized,
+                })
+
         dur = mp3_duration(path)
         costs["elevenlabs"]["chars"] += len(seg)
         costs["elevenlabs"]["usd"]   += (len(seg) / 1000) * 0.30
-        results.append({"path": path, "duration": dur})
-        print(f"      Segment {i+1}: {dur:.1f}s")
+        results.append({"path": path, "duration": dur, "words": words})
+        print(f"      Segment {i+1}: {dur:.1f}s ({len(words)} words)")
 
     return results
 
@@ -588,19 +668,23 @@ DING_VOLUME  = 0.75
 
 
 def build_timeline(card_urls: list, audio_info: list,
-                   ding_url: str, music_url: str, bg_video_url: str) -> dict:
+                   ding_url: str, music_url: str, bg_video_url: str,
+                   caption_urls: list = None) -> dict:
 
-    image_clips = []
-    voice_clips = []
-    cursor      = 0.0
+    image_clips   = []
+    voice_clips   = []
+    caption_clips = []
+    cursor        = 0.0
 
-    card_iter = iter(card_urls)
+    card_iter    = iter(card_urls)
+    caption_iter = iter(caption_urls or [])
 
     for i, info in enumerate(audio_info):
         dur   = info["duration"]
         trans = TRANSITIONS[i] if i < len(TRANSITIONS) else {"in": "fade", "out": "fade"}
 
-        if not info.get("is_outro"):
+        # Question card (i==0) only — answers shown via captions
+        if i == 0 and not info.get("is_outro"):
             card_url = next(card_iter)
             image_clips.append({
                 "asset":      {"type": "image", "src": card_url},
@@ -609,6 +693,31 @@ def build_timeline(card_urls: list, audio_info: list,
                 "fit":        "crop",
                 "transition": trans,
             })
+
+        # PIL caption image for every non-outro segment
+        if not info.get("is_outro") and caption_urls:
+            cap_url = next(caption_iter, None)
+            if cap_url:
+                if i == 0:
+                    # Hook: sit below the question card (bottom area)
+                    caption_clips.append({
+                        "asset":    {"type": "image", "src": cap_url},
+                        "start":    round(cursor, 3),
+                        "length":   round(dur, 3),
+                        "position": "bottom",
+                        "offset":   {"x": 0.0, "y": -0.05},
+                        "fit":      "none",
+                    })
+                else:
+                    # Answers: dead center of the screen
+                    caption_clips.append({
+                        "asset":    {"type": "image", "src": cap_url},
+                        "start":    round(cursor, 3),
+                        "length":   round(dur, 3),
+                        "position": "center",
+                        "offset":   {"x": 0.0, "y": 0.0},
+                        "fit":      "none",
+                    })
 
         voice_clips.append({
             "asset":  {"type": "audio", "src": info["url"], "volume": 1.0},
@@ -649,6 +758,7 @@ def build_timeline(card_urls: list, audio_info: list,
         t += info["duration"]
 
     tracks = [
+        {"clips": caption_clips},
         {"clips": image_clips},
         {"clips": [bg_clip]},
         {"clips": voice_clips},
@@ -782,18 +892,20 @@ def make_reddit_video(topic: str) -> str:
     print(f"      Search:  {search}")
     print(f"      Caption: {caption}")
 
-    all_segs = [
-        {"type": "post",    "data": post},
-        *[{"type": "comment", "data": c} for c in comments]
-    ]
+    print("\n[2/7] Rendering question card + caption images...")
+    question_card = render_post_card(post, pkg["subreddit"])
+    card_paths    = [save_card_png(question_card, 0)]
+    print("      Question card done.")
 
-    print("\n[2/7] Rendering Reddit cards...")
-    card_paths = []
-    for i, s in enumerate(all_segs):
-        card = render_post_card(s["data"], pkg["subreddit"]) \
-               if s["type"] == "post" else render_comment_card(s["data"])
-        card_paths.append(save_card_png(card, i))
-        print(f"      Card {i+1}/{len(all_segs)} done.")
+    # Render one PIL caption image per voice segment (PIL stroke_width = real outline)
+    caption_paths = []
+    for idx, seg in enumerate(segments):
+        emphasized = {w.strip(".,!?:\"'").upper() for w in seg.split()
+                      if w.strip(".,!?:\"'").isupper() and len(w.strip(".,!?:\"'")) > 1}
+        cp = render_caption_image(seg, emphasized, idx)
+        caption_paths.append(cp)
+        print(f"      Caption {idx+1} rendered.")
+
 
     MIN_DURATION = 62  # TikTok Creativity Program requires 60s+ to monetise
 
@@ -839,6 +951,10 @@ def make_reddit_video(topic: str) -> str:
     for i, cp in enumerate(card_paths):
         card_urls.append(upload(cp, "image/png"))
         print(f"      Card {i+1} uploaded.")
+    caption_urls = []
+    for i, cp in enumerate(caption_paths):
+        caption_urls.append(upload(cp, "image/png"))
+        print(f"      Caption {i+1} uploaded.")
     for i, info in enumerate(audio_info):
         info["url"] = upload(info["path"], "audio/mpeg")
         print(f"      Voice {i+1} uploaded. ({info['duration']:.1f}s)")
@@ -861,7 +977,8 @@ def make_reddit_video(topic: str) -> str:
         print(f"      {label}  {t:.1f}s – {t+info['duration']:.1f}s{ding}")
         t += info["duration"]
 
-    timeline  = build_timeline(card_urls, audio_info, ding_url, music_url, bg_video_url)
+    timeline  = build_timeline(card_urls, audio_info, ding_url, music_url, bg_video_url,
+                               caption_urls=caption_urls)
     render_id = shotstack_render(timeline)
     final_url = shotstack_poll(render_id)
 
