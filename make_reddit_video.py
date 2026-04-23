@@ -530,7 +530,7 @@ def generate_voice_segments(segments: list) -> list:
             }
         )
         import base64
-        audio_bytes = base64.b64decode(response.audio_base64)
+        audio_bytes = base64.b64decode(response.audio_base_64)
         path = str(TEMP_DIR / f"voice_{i}.mp3")
         with open(path, "wb") as f:
             f.write(audio_bytes)
@@ -629,11 +629,17 @@ def build_timeline(card_urls: list, audio_info: list,
                 "transition": trans,
             })
 
-        # Word-by-word captions for all segments (not outro)
-        if not info.get("is_outro") and info.get("words"):
+        # Word-by-word captions — skip during question card (i==0), not during outro
+        if i > 0 and not info.get("is_outro") and info.get("words"):
             for w in info["words"]:
-                color = "#FFE600" if w.get("emphasized") else "#FFFFFF"
-                size  = "82px"    if w.get("emphasized") else "72px"
+                if w.get("emphasized"):
+                    color  = "#FF0000"   # red for key words — pops hardest
+                    size   = "90px"
+                    stroke = "6px"
+                else:
+                    color  = "#FFFFFF"   # clean white for normal words
+                    size   = "78px"
+                    stroke = "5px"
                 caption_clips.append({
                     "asset": {
                         "type":   "html",
@@ -642,17 +648,18 @@ def build_timeline(card_urls: list, audio_info: list,
                             f"p {{ font-family: Arial Black, Arial, sans-serif;"
                             f" font-size: {size}; font-weight: 900;"
                             f" color: {color};"
-                            f" -webkit-text-stroke: 4px #000000;"
-                            f" margin: 0; padding: 0 10px;"
+                            f" -webkit-text-stroke: {stroke} #000000;"
+                            f" text-shadow: 3px 3px 6px rgba(0,0,0,0.9);"
+                            f" margin: 0; padding: 0 12px;"
                             f" text-align: center; }}"
                         ),
-                        "width":  800,
-                        "height": 160,
+                        "width":  900,
+                        "height": 180,
                     },
                     "start":    round(cursor + w["start"], 3),
                     "length":   round(max(w["end"] - w["start"], 0.05), 3),
                     "position": "center",
-                    "offset":   {"x": 0, "y": 0.1},
+                    "offset":   {"x": 0, "y": 0.35},   # lower third, away from question card
                 })
 
         voice_clips.append({
