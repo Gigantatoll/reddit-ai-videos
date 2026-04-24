@@ -51,8 +51,8 @@ ASSETS_DIR          = Path(os.getenv("ASSETS_DIR", "/Users/vincent/Desktop/Reddi
 TEMP_DIR            = Path("/tmp/reddit_video")
 VIDEO_W, VIDEO_H    = 1080, 1920
 
-# Active backgrounds that keep people watching — darker/high-contrast so text is readable
-FALLBACK_SEARCHES = [
+# Active backgrounds — dark/high-contrast so captions are always readable
+ALL_BACKGROUNDS = [
     "parkour night city",
     "skateboard tricks night",
     "basketball court night",
@@ -64,7 +64,34 @@ FALLBACK_SEARCHES = [
     "gym workout dark",
     "street basketball night",
     "urban parkour rooftop",
+    "boxing training gym",
+    "motorbike night ride",
+    "night skateboard street",
+    "underground subway train",
 ]
+
+USED_BG_FILE = Path(__file__).parent / "used_backgrounds.json"
+
+def _get_available_backgrounds() -> list:
+    """Return backgrounds not used in the last 5 runs."""
+    try:
+        used = json.loads(USED_BG_FILE.read_text())
+    except Exception:
+        used = []
+    recent = set(used[-5:])
+    available = [b for b in ALL_BACKGROUNDS if b not in recent]
+    return available if available else ALL_BACKGROUNDS   # fallback: all
+
+def _record_background(search: str):
+    """Save the used background so next run picks something different."""
+    try:
+        used = json.loads(USED_BG_FILE.read_text())
+    except Exception:
+        used = []
+    used.append(search)
+    USED_BG_FILE.write_text(json.dumps(used[-20:]))   # keep last 20
+
+FALLBACK_SEARCHES = ALL_BACKGROUNDS  # used as Pexels fallback list
 
 ASSETS_DIR.mkdir(parents=True, exist_ok=True)
 TEMP_DIR.mkdir(parents=True, exist_ok=True)
@@ -106,7 +133,10 @@ def ensure_sounds() -> tuple:
 # STEP 1 — Claude: Gen Z Reddit content
 # ══════════════════════════════════════════════════════════════════════════════
 def generate_reddit_package(topic: str) -> dict:
-    client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
+    client      = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
+    bg_options  = _get_available_backgrounds()
+    bg_opts_str = ", ".join(f'"{b}"' for b in bg_options)
+    bg_default  = bg_options[0]
 
     prompt = f"""You are generating a viral TikTok Reddit reading video.
 
@@ -183,10 +213,8 @@ Every segment MUST have at least one ALL CAPS word. No exceptions.
 Each segment MAX 25 words total. Use "..." for pauses.
 
 ━━ PEXELS SEARCH ━━
-Pick a DARK background — text captions must be readable. Vary it.
-Options: "parkour night city", "skateboard tricks night", "basketball court night",
-"bmx tricks extreme", "martial arts training dark", "subway train tunnel",
-"minecraft parkour", "night city driving", "gym workout dark", "urban parkour rooftop"
+Pick a DARK background so captions are readable. Choose from THIS list only:
+{bg_opts_str}
 
 Return ONLY valid JSON:
 {{
@@ -213,7 +241,7 @@ Return ONLY valid JSON:
     "[read comment 4]...[optional short dry reaction]",
     "[read comment 5]...[optional short dry reaction]"
   ],
-  "pexels_search": "parkour free running",
+  "pexels_search": "{bg_default}",
   "caption": "Viral TikTok caption. Hook must be ONE specific funny/shocking detail from the answers (not generic). Always include #reddit #askreddit. Add 2-3 relevant hashtags. Under 130 chars."
 }}"""
 
@@ -1010,6 +1038,7 @@ def make_reddit_video(topic: str) -> str:
     local = download_video(final_url, topic)
 
     save_caption(local, caption, post["title"])
+    _record_background(search)   # so next run picks a different background
 
     print(f"\n  ✅ DONE!")
     print(f"  Saved  → {local}")
