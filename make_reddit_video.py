@@ -51,23 +51,23 @@ ASSETS_DIR          = Path(os.getenv("ASSETS_DIR", "/Users/vincent/Desktop/Reddi
 TEMP_DIR            = Path("/tmp/reddit_video")
 VIDEO_W, VIDEO_H    = 1080, 1920
 
-# Active backgrounds — dark/high-contrast so captions are always readable
+# Active backgrounds — each one visually distinct, dark enough for captions
 ALL_BACKGROUNDS = [
-    "parkour night city",
-    "skateboard tricks night",
-    "basketball court night",
-    "bmx tricks extreme",
-    "martial arts training dark",
-    "subway train tunnel",
-    "minecraft parkour",
-    "night city driving",
-    "gym workout dark",
-    "street basketball night",
-    "urban parkour rooftop",
-    "boxing training gym",
-    "motorbike night ride",
-    "night skateboard street",
-    "underground subway train",
+    "parkour rooftop night",
+    "skateboard tricks street",
+    "basketball dunk slow motion",
+    "bmx tricks dirt",
+    "boxing training heavy bag",
+    "motorcycle highway night",
+    "minecraft parkour gameplay",
+    "gym weightlifting workout",
+    "swimming pool underwater",
+    "rock climbing indoor",
+    "soccer freestyle skills",
+    "running track athlete",
+    "martial arts sparring",
+    "longboard downhill speed",
+    "drone footage city night",
 ]
 
 USED_BG_FILE = Path(__file__).parent / "used_backgrounds.json"
