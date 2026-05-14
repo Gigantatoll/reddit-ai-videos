@@ -1,12 +1,11 @@
 name: Reddit Video Generator
 
 on:
-  schedule:
-    # Hamburg is UTC+2 in summer (CEST)
-    # 8:00 AM Hamburg  = 06:00 UTC
-    - cron: "0 6 * * *"    # 8am Hamburg
+  # Schedule disabled — videos are created manually on demand
+  # schedule:
+  #   - cron: "0 6 * * *"    # 8am Hamburg
 
-  # Also lets you trigger it manually from the Actions tab
+  # Trigger manually from the Actions tab if needed
   workflow_dispatch:
 
 jobs:
